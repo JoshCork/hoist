@@ -1,5 +1,33 @@
 ## 12/14/2014 - OOJS - 
 
+### subclasses - oof this was hard
+ - building out a subclass quiz: this was difficult. Here's my swag at code: 
+
+ 	var Car = function(loc){
+	    this.loc = loc;
+	};
+	Car.prototype.move = function(){
+	    this.loc++;
+	};
+
+	var Van = function(loc){
+	    var obj = Object.create(Car.prototype);
+		this.loc = loc;
+	    this.move = obj.move;
+	};
+
+	Van.prototype.grab = function() {
+	    console.log('I have no idea what grab is supposed to do');
+	};
+
+	var zed = new Car(3);
+	zed.move();
+
+	var amy = new Van(9);
+	amy.move();
+	amy.grab();
+	console.log('AmyLocaiton: ' + amy.loc);
+
 ### Pseudoclassical Patters - for classes in javascript
 The pattern is named this way because it attempts to replicate classes in true OO languages. 
 
