@@ -1,6 +1,9 @@
 ## 12/14/2014 - OOJS - 
 
 ### subclasses - oof this was hard
+
+ - *be careful* - Van.prototype = new Car(); --> this is incorrect but was widely accepted as the right way to do it.  It will show up as a BKM on many reputable sites. 
+
  - building out a subclass quiz: this was difficult. Here's my swag at code: 
 
  	var Car = function(loc){
@@ -27,6 +30,24 @@
 	amy.move();
 	amy.grab();
 	console.log('AmyLocaiton: ' + amy.loc);
+
+ - However after reviewing the answer set this is what it should have looked lke:
+
+ 	var Car = function(loc) {
+ 		thi.loc = loc;
+ 	};
+
+ 	Car.prototype.move = function () {
+ 		this.loc++;
+ 	};
+
+ 	var Van = function(loc) {
+ 		Car.call(this,loc);
+ 	};
+
+ 	Van.prototype = Object.create(Car.prototype);
+ 	Van.prototype.constructor = Van; // this makes up for the one we overwrote above.  W/out this it would fall through to Car which is not correct... especially since we want Van to have it's own Methods first.  
+ 	Van.prototype.grab = function() {/*.......*/};
 
 ### Pseudoclassical Patters - for classes in javascript
 The pattern is named this way because it attempts to replicate classes in true OO languages. 
