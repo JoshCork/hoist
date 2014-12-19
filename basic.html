@@ -5,21 +5,44 @@
 </head>
 
 <body>
-<canvas id="c" width="766" height="554"></canvas>
+<canvas id="c" width="1000" height="1000"></canvas>
 <script>
 	var c = document.querySelector("#c");
 	var ctx = c.getContext("2d");
+	var radians;
 	// var image = new Image();
+	// 
+	// ctx.strokeRect(50,50,100,100);
+	// radians = 125 * (Math.PI/180);
+	// ctx.rotate(radians);
+	// ctx.stroke();
+	
 
-	ctx.fillStyle = "red";
+	
 
-	ctx.fillRect(
-		50 // x coordinate
-		,50 // y coordinate
-		,100 // height
-		,100 // width
-	);
-	ctx.stroke();
+	for ( var i = 25; i < 10000; i++ ) {
+
+		ctx.strokeRect(i,i,i,i);
+		ctx.strokeRect(i+i,i-i,i,i);
+		ctx.scale(1,1);
+		ctx.translate(2,3);
+		radians = 2.25 * (Math.PI/180);
+		ctx.rotate(radians);
+
+	}
+
+	// ctx.beginPath();
+	// ctx.moveTo(75, 75);	
+	// ctx.lineTo(125,125);
+	// ctx.lineTo(125,75);	
+	// ctx.fill();
+
+	// ctx.fillRect(
+	// 	50 // x coordinate
+	// 	,50 // y coordinate
+	// 	,100 // height
+	// 	,100 // width
+	// );
 
 	// ctx.clearRect(0,0,c.width,c.height);
 		//ctx.strokeRect(50,50,50,50);
