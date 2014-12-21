@@ -25,24 +25,21 @@
     var c = document.querySelector("#c");
     var ctx = c.getContext("2d");
 
-    var myImageData = ctx.createImageData(c.width,c.height);
+    var myImageData = ctx.getImageData(0,0,c.width,c.height);
     console.log(myImageData);
-    
-    var test = 0;
-    var tagMe = 37;
 
-    for (p in myImageData.data) {
-
-        if ( p = tagMe ) {
-            myImageData.data[p] = 255;
-            myImageData.data[p+2] = 255;
-            tagMe = p + 40; 
-            test = test + 1; 
+    function paintMeGreen(imageData) {
+        var numPixels = imageData.data.length / 4; // RGBA
+        for (var i = 0; i < numPixels; i++) {
+            if (i % 10 === 0) {
+                imageData.data[i * 4 + 1] = 255;
+                imageData.data[i * 4 + 3] = 255;
+            }
         }
+        ctx.putImageData(imageData,0,0);
     }
-
-    ctx.putImageData(myImageData,0,0)
-    console.log(test);
+    paintMeGreen(myImageData);
+    
     console.log(myImageData);
 
     
