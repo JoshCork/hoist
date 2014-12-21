@@ -45,14 +45,12 @@
     
     function redrawMeme(image, topLine, bottomLine) {
       // Get Canvas2DContext
-      console.log("i'm in redrawMeme");
-      console.log("image: " + image + " topLine: " + topLine + " bottomLine: " + bottomLine);
+      
       var canvas = document.querySelector('canvas');      
       var ctx = canvas.getContext("2d");
       // Your code here
       
       if (image != null) {
-        console.log("image is not nuill");
         ctx.drawImage(image,0,0, canvas.width,canvas.height);        
       }      
       
