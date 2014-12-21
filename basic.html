@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <canvas id="c" width="1000" height="1000"></canvas>
+    <canvas id="c" width="500" height="500"></canvas>
     <script>
     // var c = document.querySelector("#c");
     // var ctx = c.getContext("2d");
@@ -25,40 +25,62 @@
     var c = document.querySelector("#c");
     var ctx = c.getContext("2d");
 
-    ctx.fillStyle = "blue";
-    ctx.fillRect(0, 0, 50, 50);
-
-    // Save state with blue fill
-    ctx.save();
-    ctx.fillStyle = "black";
-    ctx.fillRect(0,0, c.width/2, c.height);
-    // Restore to blue fill
-    ctx.restore();    
-
-    ctx.fillRect(200, 200, 10, 10);
-    // Restore to blue fill
-    ctx.restore();    
-
-    ctx.fillRect(200, 10, 200, 100);
-    ctx.fillStyle = "white";
-    ctx.fillRect(200, 10, 100, 50);
-
-    ctx.fillStyle = "white";
-    ctx.lineWidth = "3";
-    ctx.font = "bold 36px impact";
-    ctx.fillText("CANVAS MEMES!", 300,300);
-    ctx.strokeText("CANVAS MEMES!", 300,300);
-
-    // instructor's answer
-    ctx.font = "36pt Impact";
-    ctx.textAlign = "center";
+    var myImageData = ctx.createImageData(c.width,c.height);
+    console.log(myImageData);
     
-    ctx.fillStyle = "white";
-    ctx.fillText("I LOVE CANVAS MEMES!", c.width/2,c.height/2);
+    var test = 0;
+    var tagMe = 37;
 
-    ctx.strokeStyle = "black";
-    ctx.lineWeidth = 3;
-    ctx.strokeText("I LOVE CANVAS MEMES!", c.width/2,c.height/2);
+    for (p in myImageData.data) {
+
+        if ( p = tagMe ) {
+            myImageData.data[p] = 255;
+            myImageData.data[p+2] = 255;
+            tagMe = p + 40; 
+            test = test + 1; 
+        }
+    }
+
+    ctx.putImageData(myImageData,0,0)
+    console.log(test);
+    console.log(myImageData);
+
+    
+
+    // ctx.fillStyle = "blue";
+    // ctx.fillRect(0, 0, 50, 50);
+
+    // // Save state with blue fill
+    // ctx.save();
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(0,0, c.width/2, c.height);
+    // // Restore to blue fill
+    // ctx.restore();    
+
+    // ctx.fillRect(200, 200, 10, 10);
+    // // Restore to blue fill
+    // ctx.restore();    
+
+    // ctx.fillRect(200, 10, 200, 100);
+    // ctx.fillStyle = "white";
+    // ctx.fillRect(200, 10, 100, 50);
+
+    // ctx.fillStyle = "white";
+    // ctx.lineWidth = "3";
+    // ctx.font = "bold 36px impact";
+    // ctx.fillText("CANVAS MEMES!", 300,300);
+    // ctx.strokeText("CANVAS MEMES!", 300,300);
+
+    // // instructor's answer
+    // ctx.font = "36pt Impact";
+    // ctx.textAlign = "center";
+    
+    // ctx.fillStyle = "white";
+    // ctx.fillText("I LOVE CANVAS MEMES!", c.width/2,c.height/2);
+
+    // ctx.strokeStyle = "black";
+    // ctx.lineWeidth = 3;
+    // ctx.strokeText("I LOVE CANVAS MEMES!", c.width/2,c.height/2);
 
 
 
