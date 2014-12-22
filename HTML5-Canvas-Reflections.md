@@ -1,4 +1,11 @@
 
+## 12/22/2014 - "your DONE"
+Instructor's notes on gaming:
+
+	Here <http://www.html5gamedevelopment.com/html5-game-tutorials/2013-12-developing-html5-games-1hr-video-presentation> is a great video about developing a HTML5 game. You can also check out /r/gamedev <https://reddit.com/r/gamedev> for more resources.
+
+	This is no formal final project at this time for this course but don't let that get you down. I'm sure you already have one or two ideas that you want to work on. And if you don't, what are you waiting for? Go build something and most importantly, BE awesome.
+
 ## 12/22/2014 - Instructor Notes on The Game Loop / Processing User Input
 
 Playing a video in a canvas using requestAnimationFrame is just one of the many interactive things you can do.
@@ -30,7 +37,7 @@ Kibo allows you to reference keys by their common names('a', '3', 'up') instead 
 	k.up(['enter', 'q'], function() {
 	    // Do other stuff.
 	});
-	
+
 Processing Mouse Input
 
 Like many other DOM elements, the canvas can accept click and mousedown events. We do however have to do a little work to figure out where exactly in the canvas the user has clicked. Mouse click events return clientX and clientY positions that are global to the browser window. Every element knows where it is positioned relative to the browsers (0,0) position (offsetLeft and offsetTop).
