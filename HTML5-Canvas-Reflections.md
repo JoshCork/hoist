@@ -1,4 +1,61 @@
 
+## 12/22/2014 - Instructor Notes on The Game Loop / Processing User Input
+
+Playing a video in a canvas using requestAnimationFrame is just one of the many interactive things you can do.
+
+To create more complex applications, we have to think more about not only the things we are displaying to the user on-screen but also any input (keyboard, mouse, audio) the user might generate that we need to process.
+
+The game loop is a sequence of events that run continuously while an app or game is being used. requestAnimationFrame handles most of the heavy lifting in that it ensures that your app runs as close to 60 frames per second as possible while the app is being actively viewed.
+
+Assuming we have already creating the functions we plan to call, a fleshed out game loop could look something like this.
+
+	function draw() {
+	    // request to execute this function at the next earliest convenience
+	    requestAnimationFrame(draw);
+	    processInput();
+	    moveObjectsAndEnemies();
+	    drawAllTheThings();
+	}
+	Processing Keyboard Input
+
+While it isn't too difficult to process keyboard presses by hand, I rather stand on the shoulders of giants and use open source projects that have perfected a library serving the thing I want to do. One such library is Kibo.
+
+Kibo allows you to reference keys by their common names('a', '3', 'up') instead of their keycodes greatly simplifying your code. You can also attach events to pressing or releasing a key as well as modifier keys or wildcards.
+
+	var k = new Kibo();
+	k.down(['up', 'w'], function() {
+	    // Do something cool on the canvas
+	});
+
+	k.up(['enter', 'q'], function() {
+	    // Do other stuff.
+	});
+	
+Processing Mouse Input
+
+Like many other DOM elements, the canvas can accept click and mousedown events. We do however have to do a little work to figure out where exactly in the canvas the user has clicked. Mouse click events return clientX and clientY positions that are global to the browser window. Every element knows where it is positioned relative to the browsers (0,0) position (offsetLeft and offsetTop).
+
+To get the canvas-relative of a click, you need to subtract the offsetLeft and offsetTop values from clientX and clientY. Check out the example code below.
+
+	var c = document.querySelector("canvas");
+
+	function handleMouseClick(evt) {
+	        x = evt.clientX - c.offsetLeft;
+	        y = evt.clientY - c.offsetTop;
+	        console.log("x,y:"+x+","+y);
+	}
+	c.addEventListener("click", handleMouseClick, false);
+
+## 12/22/2014 - Links from video tutorial
+
+Some good links for learning annimation ons screen. 
+
+	1. http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+	2. http://www.kirupa.com/html5/animating_with_requestAnimationFrame.htm
+	3. https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame
+	4. Kibo.js - a JavaScript library for processing keyboard input. https://github.com/marquete/kibo
+
+
 ## 12/20/2014 - From Pixels to Animation
 
 ImageData Object

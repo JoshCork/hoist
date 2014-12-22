@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <video id="v" controls loop src="video/SC-IOT-POC.mp4"></video>
+    <canvas id="c"></canvas>
+    <script type="text/javascript">
+    var canvas = document.querySelector("canvas");
+    var ctx = canvas.getContext("2d");
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var v = document.querySelector('#v');
+        var canvas = document.querySelector('#c');
+        var ctx = canvas.getContext('2d');
+
+        v.addEventListener('loadedmetadata', function() {
+            canvas.width = this.videoWidth;
+            canvas.height = this.videoHeight;
+        })
+
+        var draw = function() {
+            canvas.getContext('2d').drawImage(v, 0, 0);
+            requestAnimationFrame(draw);
+        }
+
+        v.addEventListener('play', function() {
+            if (v.paused || v.ended) return;
+            draw();
+        });
+    });
+
+    function paintGrayScale(imageData, context) {
+
+        var numPixels = imageData.data.length / 4; // RGBA
+        var pixel, r, g, b, a;
+
+
+        for (var i = 0; i < numPixels; i++) {
+
+            r = imageData.data[i * 4 + 0];
+            g = imageData.data[i * 4 + 1];
+            b = imageData.data[i * 4 + 2];
+            a = imageData.data[i * 4 + 3];
+
+            pixel = makePixelGrayScale(r, g, b);
+
+            imageData.data[i * 4] = pixel;
+            imageData.data[i * 4 + 1] = pixel;
+            imageData.data[i * 4 + 2] = pixel;
+            imageData.data[i * 4 + 3] = a;
+
+        }
+        context.putImageData(imageData, 0, 0);
+        console.log(imageData);
+    }
+
+    var makePixelGrayScale = function( r,g,b ) {
+        var gs = ( 0.3 * r ) + ( 0.59 * g ) + ( 0.11 * b );
+        return ( gs );
+    }
+
+
+    </script>
+</body>
+
+</html>
