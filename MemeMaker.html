@@ -59,7 +59,9 @@
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             var myImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             console.log(myImageData);
-            paintGrayScale(myImageData,ctx);
+            // paintGrayScale(myImageData,ctx);
+            // doIt(myImageData,ctx);
+            mixEmUp(myImageData, ctx);
 
         }
 
@@ -114,29 +116,59 @@
     function paintGrayScale(imageData, context) {
         
         var numPixels = imageData.data.length / 4; // RGBA
-        var myGray, Red, Green, Blue, myCounter;
+        var pixel, r, g, b, a;
+
 
         for (var i = 0; i < numPixels; i++) {
-            // if (i % 4 === 0) {
-                Red = imageData.data[i * 4];
-                Green = imageData.data[i * 4 + 1];
-                Blue = imageData.data[i * 4 + 2];
+            
+                r = imageData.data[i * 4 + 0];
+                g = imageData.data[i * 4 + 1];
+                b = imageData.data[i * 4 + 2];
+                a = imageData.data[i * 4 + 3];
 
-                myGray = (Red + Blue + Green) / 3;
-
-                imageData.data[i * 4] = myGray;
-                imageData.data[i * 4 + 1] = myGray;
-                imageData.data[i * 4 + 2] = myGray;
-                imageData.data[i * 4 + 3] = 255;
-
-                myCounter = myCounter +1;
-            // }
+                pixel = makePixelGrayScale( r,g,b );
+                
+                imageData.data[i * 4] = pixel;
+                imageData.data[i * 4 + 1] = pixel;
+                imageData.data[i * 4 + 2] = pixel;
+                imageData.data[i * 4 + 3] = a;                
+            
         }
         context.putImageData(imageData, 0, 0);
-
         console.log(imageData);
-        console.log(myCounter);
+    }
 
+    function doIt(imageData, context) {
+      
+      var length = imageData.data.length / 4;
+      
+      for (var i = 0; i < length; i++) {
+          imageData.data[i * 4 + 0] = 255 - imageData.data[i * 4 + 0];   //Red
+          imageData.data[i * 4 + 1] = 255 - imageData.data[i * 4 + 1];   //Green
+          imageData.data[i * 4 + 2] = 255 - imageData.data[i * 4 + 2];   //Blue
+      }
+      
+      context.putImageData(imageData, 0, 0);
+    }
+
+
+    function mixEmUp(imageData, context) {
+      
+      var length = imageData.data.length / 4;
+      
+      for (var i = 0; i < length; i++) {
+          imageData.data[i * 4 + 0] = imageData.data[i * 4 + 2];   //Red
+          imageData.data[i * 4 + 1] = imageData.data[i * 4 + 0];   //Green
+          imageData.data[i * 4 + 2] = imageData.data[i * 4 + 1];   //Blue
+      }
+      
+      context.putImageData(imageData, 0, 0);
+    }
+
+
+    var makePixelGrayScale = function( r,g,b ) {
+        var gs = ( 0.3 * r ) + ( 0.59 * g ) + ( 0.11 * b );
+        return ( gs );
     }
 
     window.topLineText = "";
