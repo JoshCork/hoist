@@ -30,7 +30,7 @@ Complex applications that must be “broken down” into simpler entities that m
 
 Your project will be evaluated by a Udacity reviewer according to the rubric below. Be sure to review it thoroughly before you submit. All criteria must "meet expectations" in order to pass.
 
-![image of the ruberic](images/p3ruberic.jpg)
+![image of the ruberic](http://i.imgur.com/3GmG55k.png)
 
 Submission
 
