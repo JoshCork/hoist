@@ -25,13 +25,13 @@ This is the enemy on screen. In the video these are some sweet bugs - starter cl
 	- speed: In the video the bugs had a set speed (the same from left to right on the screen) but that speed was different for each bug. 
 
 **MapBlock**
-These are the blocks on the screen that the player moves across.  What i noticed from the video is that most are of the same size but some are about 50% larger than the others. Other than that they had different backgrounds and patterns.
+These are the blocks on the screen that the player moves across. They had different backgrounds and patterns. They are all the same size but the blocks all overlap except the very bottom ones.  
 
 *Methods*
 None - yet - for the exceeds on the ruberic thinking maybe a method like invokeShield where a particular block becomes safe for the hero.
 
 *properties*
-	- design: In the video there were three different designs.  These should probably be subclasses: cobbleStone, smallGrass, largeGrass, water.
+	- design: In the video there were three different designs.  These should probably be subclasses: cobbleStone, grass, water. --> after looking at the assetts I noticed that they were all the same size but look like they are overlapped on top of each other.  
 	- isGoal: keeps track of whether or not to respawn the hero and increment the score
-	- isStartingBlock: this might just be synonymous with the largeGrass block subclass.  not sure yet. 
+	- isStartingBlock: so I know where to respawn the player.
 

@@ -42,5 +42,38 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    hero.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+var MapBlock = function() {
+    var isGoal, isStartBlock;
+}
+
+var CobbleStone = function() {
+    MapBlock.call(this);
+}
+
+CobbleStone.prototype = Object.create(MapBlock.prototype);
+CobbleStone.prototype.constructor = CobbleStone; // this makes up for the constructor we overwrote. 
+
+var Hero = function (loc) {
+    this.loc = loc;
+    this.sprite = 'images/char-boy.png';
+    // generic class for a player which I'm calling a "hero".
+}
+
+Hero.prototype.update = function(dt) {
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+}
+
+Hero.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Hero.prototype.handleInput = function() {
+
+}
+
