@@ -6,14 +6,19 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+// This is the same as "move" in the OOJS class.
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    
+    this.loc = (loc++)*dt; 
+
 }
 
 // Draw the enemy on the screen, required method for game
@@ -25,10 +30,31 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
+var Player = function () {    
+    this.sprite = 'images/char-boy.png';
+    // generic class for a player which I'm calling a "hero".
+}
+
+Player.prototype.update = function(dt) {
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+}
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Player.prototype.handleInput = function() {
+
+} 
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var allEnemies = [];
+var player = new Player();
 
 
 
@@ -42,38 +68,9 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    hero.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
 
 
-var MapBlock = function() {
-    var isGoal, isStartBlock;
-}
 
-var CobbleStone = function() {
-    MapBlock.call(this);
-}
-
-CobbleStone.prototype = Object.create(MapBlock.prototype);
-CobbleStone.prototype.constructor = CobbleStone; // this makes up for the constructor we overwrote. 
-
-var Hero = function (loc) {
-    this.loc = loc;
-    this.sprite = 'images/char-boy.png';
-    // generic class for a player which I'm calling a "hero".
-}
-
-Hero.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-}
-
-Hero.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
-
-Hero.prototype.handleInput = function() {
-
-}
 
