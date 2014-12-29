@@ -12,7 +12,9 @@ ScoreBoard.prototype.render = function() {
     ctx.strokeStyle = 'black';
     ctx.line = 3;
     ctx.fillStyle = 'white';
+    
 
+    ctx.fillRect(0,0,505,50);
     ctx.fillText(this.livesText + this.lives + this.gameScoreText + this.score, 0, 50);
     ctx.strokeText(this.livesText + this.lives + this.gameScoreText + this.score, 0, 50);
     //console.log("i've rendered the scoreboard");
@@ -86,7 +88,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 var Player = function() {
-    this.sprite = 'images/char-boy.png';    
+    this.sprite = 'images/char-boy.png';
     this.respawnLoc = [200, 380];
 
     this.x = this.respawnLoc[0];
@@ -124,7 +126,7 @@ Player.prototype.respawn = function() {
 Player.prototype.achievement = function() {
     this.y = 380;
     scoreboard.increment();
-    
+
 }
 
 Player.prototype.handleInput = function(input) {
