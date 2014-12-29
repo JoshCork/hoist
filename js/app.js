@@ -7,6 +7,8 @@ var Enemy = function() {
 
     this.x = 0;
     this.y = this.spawnRange[getRandomInt(0,2)]; 
+
+    this.boardLoc = getBoardLoc(this.x, this.y);
     this.speed = getRandomInt(this.speedRange[0],this.speedRange[1]);
     
 
@@ -32,6 +34,9 @@ Enemy.prototype.update = function(dt) {
         this.y = this.spawnRange[getRandomInt(0,3)]; 
         this.speed = getRandomInt(this.speedRange[0],this.speedRange[1]);
     }
+
+    this.boardLoc = getBoardLoc(this.x,this.y);
+    //console.log("EnemyLocation: " + this.boardLoc);
 }
 
 /*
@@ -52,10 +57,12 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';    
-    this.x = 0;
+    
+    this.x = 200;
     this.y = 380;
-    this.vHops = 80
-    this.hHops = 100
+    this.vHops = 81;
+    this.hHops = 100;
+    this.boardLoc = getBoardLoc(this.x,this.y);
     // generic class for a player.
 }
 
@@ -63,6 +70,8 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.boardLoc = getBoardLoc(this.x,this.y);
+    //console.log("playerLocation: " + this.boardLoc);
 }
 
 Player.prototype.render = function() {
@@ -75,7 +84,7 @@ Player.prototype.handleInput = function(input) {
     //todo: need to figure out how to not make these values hard coded as limits. 
     switch (input) {
         case 'up':
-            if (this.y > 0 ) { this.y = this.y - this.vHops; } else { /* do nothing */ }
+            if (this.y > 57 ) { this.y = this.y - this.vHops; } else { this.y = 380 }
             console.log(this.y)
             break;
         case 'down':
@@ -90,6 +99,16 @@ Player.prototype.handleInput = function(input) {
     }
 
 
+}
+
+function getBoardLoc(x,y) {
+    var myBoardLoc = [];
+
+    myBoardLoc.push(Math.ceil((x)/100));
+    myBoardLoc.push(Math.ceil((y)/81));
+
+    return myBoardLoc;
+    
 }
 
 
