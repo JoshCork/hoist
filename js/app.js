@@ -1,11 +1,29 @@
-var ScoreBoard = function() {
-    this.livesText = "Lives: "
-    this.gameScoreText = " Score: "
+/**
+ * Class ScoreBoard: Keeps track of the game, lives and score. New games start out with 
+ * five lives.  Each time a collision occurs a player loses a life.  New games start out 
+ * a score of zero.  Each time the player reaches the water the score is incremented and 
+ * that value is tracked here on the scoreboard.
+ * 
+ * @class ScoreBoard
+ * @classdesc A generic scoreboard
+ * @property {string} LIVES_TEXT        - A constant value for the scoreboard text to display for keeping track of lives.
+ * @property {string} GAME_SCORE_TEXT   - A constant value for the scoreboard text to display for keeping track of the score. 
+ * @property {int} score                - The current value of the game score.
+ * @property {int} lives                - the current number of lives remaining in the game.  
+ * @constructor
+ */
+var ScoreBoard = function() {    
+    this.LIVES_TEXT = "Lives: "
+    this.GAME_SCORE_TEXT = " Score: "
     this.score = 0;
     this.lives = 5;
-
 }
 
+/*
+ * render method for the Scoreboard class.  This method is used to draw the scoreboard
+ * on the screen.  
+ * @return {n/a} this method does not return any values.
+ */
 ScoreBoard.prototype.render = function() {
     ctx.font = "36pt Impact";
     ctx.textAlign = "left";
@@ -15,24 +33,32 @@ ScoreBoard.prototype.render = function() {
     
 
     ctx.fillRect(0,0,505,50);
-    ctx.fillText(this.livesText + this.lives + this.gameScoreText + this.score, 0, 50);
-    ctx.strokeText(this.livesText + this.lives + this.gameScoreText + this.score, 0, 50);
+    ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, 0, 50);
+    ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, 0, 50);
     //console.log("i've rendered the scoreboard");
 }
 
-ScoreBoard.prototype.update = function() {
-    // update the scoreboard here. 
-}
-
+/*
+ * This is the increment method for the Scoreboard class.  It increments the score by
+ * 100 each time it is called. 
+ */
 ScoreBoard.prototype.increment = function() {
     this.score = this.score + 100;
 }
 
+/*
+ * This is the decrement method for the Scoreboard class.  It decrements the lives by
+ * 1 each time it is called. 
+ */
 ScoreBoard.prototype.decrement = function() {
     this.lives = --this.lives;
 }
 
-// Enemies our player must avoid
+
+/*
+ * This is the Enemy class.  Our player must avoid Enemies or else they lose a life.  
+ * 
+ */
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
