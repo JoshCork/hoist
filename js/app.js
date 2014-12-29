@@ -16,8 +16,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    
-    this.loc = (loc++)*dt; 
+
+    this.loc = (loc++) * dt;
 
 }
 
@@ -30,9 +30,13 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function () {    
-    this.sprite = 'images/char-boy.png';
-    // generic class for a player which I'm calling a "hero".
+var Player = function() {
+    this.sprite = 'images/char-boy.png';    
+    this.x = 0;
+    this.y = 380;
+    this.vHops = 80
+    this.hHops = 100
+    // generic class for a player.
 }
 
 Player.prototype.update = function(dt) {
@@ -43,11 +47,30 @@ Player.prototype.update = function(dt) {
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
 }
 
-Player.prototype.handleInput = function() {
+Player.prototype.handleInput = function(input) {
+    console.log(input);    
 
-} 
+    switch (input) {
+        case 'up':
+            if (this.y > 0 ) { this.y = this.y - this.vHops; } else { /* do nothing */ }
+            console.log(this.y)
+            break;
+        case 'down':
+            if (this.y < 380) { this.y = this.y + this.vHops; } else { /* do nothing */ }
+            break;
+        case 'left':
+            if (this.x > 0) { this.x = this.x - this.hHops; } else { /* do nothing */ }
+            break;
+        case 'right':
+            if (this.x < 400) { this.x = this.x + this.hHops; } else { /* do nothing */ }            
+            break;
+    }
+
+
+}
 
 
 // Now instantiate your objects.
@@ -70,7 +93,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-
-
-
