@@ -2,6 +2,13 @@
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    this.spawnRange = [60,140,220];
+    this.speedRange = [40,500];  
+
+    this.x = 0;
+    this.y = this.spawnRange[getRandomInt(0,2)]; 
+    this.speed = getRandomInt(this.speedRange[0],this.speedRange[1]);
+    
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -16,9 +23,22 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    if (this.x < 600) {
+        this.x = this.x + (this.speed*dt);
+    }
+    else
+    {
+        this.x = -50;
+        this.y = this.spawnRange[getRandomInt(0,3)]; 
+        this.speed = getRandomInt(this.speedRange[0],this.speedRange[1]);
+    }
+}
 
-    this.loc = (loc++) * dt;
-
+/*
+ source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ */
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // Draw the enemy on the screen, required method for game
@@ -51,8 +71,8 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.handleInput = function(input) {
-    console.log(input);    
-
+    console.log(input);   
+    //todo: need to figure out how to not make these values hard coded as limits. 
     switch (input) {
         case 'up':
             if (this.y > 0 ) { this.y = this.y - this.vHops; } else { /* do nothing */ }
@@ -77,6 +97,11 @@ Player.prototype.handleInput = function(input) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
+for (i = 0; i < 3; i++) {
+    allEnemies.push(new Enemy());
+    console.log(allEnemies);
+}
+
 var player = new Player();
 
 
