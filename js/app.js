@@ -20,8 +20,14 @@ var ScoreBoard = function() {
 }
 
 /*
- * render method for the Scoreboard class.  This method is used to draw the scoreboard
- * on the screen.  
+ * Operates on an instance of ScoreBoard and renders the scoreboard to the screen. 
+ * This method is used to draw the scoreboard on the screen.
+ * @property {string} font          - The font that the text will be rendered in.
+ * @property {string} textAlign     - Alignment of the text.
+ * @property {string} strokeStyle   - Style of the stroke around the text.
+ * @property {int} line             - Size of the line which makes up the stroke.
+ * @property {string} fillStyle     - Color of the fill on the canvas. Used for both the fillRect and fillText methods.
+ * 
  * @return {n/a} this method does not return any values.
  */
 ScoreBoard.prototype.render = function() {
@@ -41,6 +47,7 @@ ScoreBoard.prototype.render = function() {
 /*
  * This is the increment method for the Scoreboard class.  It increments the score by
  * 100 each time it is called. 
+ * @return {n/a} this method does not return any values.
  */
 ScoreBoard.prototype.increment = function() {
     this.score = this.score + 100;
@@ -49,31 +56,42 @@ ScoreBoard.prototype.increment = function() {
 /*
  * This is the decrement method for the Scoreboard class.  It decrements the lives by
  * 1 each time it is called. 
+ * @return {n/a} this mothod does not return any values.
  */
 ScoreBoard.prototype.decrement = function() {
     this.lives = --this.lives;
 }
 
 
-/*
- * This is the Enemy class.  Our player must avoid Enemies or else they lose a life.  
+/**
+ * Class Enemy: This is the Enemy class.  Our player must avoid Enemies or else they lose a life. 
+ * The job of the Enemy is to move at a random speed from left to right across the screen and collide
+ * with the player in order to end the game. 
  * 
+ * @class Enemy
+ * @classdesc A generic enemy.
+ * @property {Array.<number>} spawnRange    - An array with three values.  The first is low end of the range the last
+ *                                          is the high end of the range.  These determine where on the map the enemy
+ *                                          can respawn when it moves from left to right and moves off the screen. This
+ *                                          is used as the Y value on the canvas where the enemy comes back on the left.
+ * @property {Array.<number>} speedRange    - This stores the range of values that an enemy can use as it's speed for moving from left
+ *                                          to right across the screen. 
+ * @property {int} x                        - The current horizontal value on the canvas (the x coordinate).
+ * @property {int} y                        - The current vertical value on the canvas (the y coordinate).
+ * @property {Array.<number>} boardLoc      - The current location on the grid where the Enemy is. Stores a location of the tile on
+ *                                          the map where the enemy currently is.  The map grid starts with the upper left most tile being 
+ *                                          at position zero, zero (0,0).
+ * @property {int} speed                    - The current speed of an enemy as they move from left to right across the screen.
+ * @property {string} sprite                - The path to the image of this Enemy. 
+ * @constructor
  */
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
     this.spawnRange = [60, 140, 220];
     this.speedRange = [40, 500];
-
     this.x = 0;
     this.y = this.spawnRange[getRandomInt(0, 2)];
-
     this.boardLoc = getBoardLoc(this.x, this.y);
     this.speed = getRandomInt(this.speedRange[0], this.speedRange[1]);
-
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
 }
