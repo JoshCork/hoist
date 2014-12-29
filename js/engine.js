@@ -87,6 +87,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             if (enemy.boardLoc[0] === player.boardLoc[0] && enemy.boardLoc[1] === player.boardLoc[1] ) {
                 console.log("COLLISION!!!!!!!");
+                player.respawn();
+
             } else {
                 // do nothing, you are safe.             
             }
@@ -165,6 +167,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        scoreboard.render();
     }
 
     /* This function does nothing but it could have been a good place to
