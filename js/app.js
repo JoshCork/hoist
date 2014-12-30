@@ -45,7 +45,7 @@ ScoreBoard.prototype.render = function() {
 }
 
 /*
- * This is the increment method for the Scoreboard class.  It increments the score by
+ * Operates on an instance of ScoreBoard and it increments the score by
  * 100 each time it is called. 
  * @return {n/a} this method does not return any values.
  */
@@ -54,7 +54,7 @@ ScoreBoard.prototype.increment = function() {
 }
 
 /*
- * This is the decrement method for the Scoreboard class.  It decrements the lives by
+ * Operates on an instance of ScoreBoard and it decrements the lives by
  * 1 each time it is called. 
  * @return {n/a} this mothod does not return any values.
  */
@@ -96,13 +96,15 @@ var Enemy = function() {
 
 }
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-// This is the same as "move" in the OOJS class.
+/**
+ * Operates on an instance of Enemy object and updates and properties associated with that instnace.
+ *
+ * @param {number}  dt  The dt parameter will ensure the game runs at the same speed for all computers.
+ * 
+ * @return {n/a} this method does not return any values.
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // You should multiply any movement by t
     if (this.x < 600) {
         this.x = this.x + (this.speed * dt);
     } else {
@@ -110,27 +112,51 @@ Enemy.prototype.update = function(dt) {
         this.y = this.spawnRange[getRandomInt(0, 3)];
         this.speed = getRandomInt(this.speedRange[0], this.speedRange[1]);
     }
-
     this.boardLoc = getBoardLoc(this.x, this.y);
-    //console.log("EnemyLocation: " + this.boardLoc);
 }
 
-/*
- source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+/**
+ * A random integer generator.
+ * @source http://mzl.la/149Uul9  
+ * @param  {number} min the minimum number that should be inluded in the result returned.
+ * @param  {number} max the max number that the integer is based off of.  Since I'm using Math.floor
+ *                      it will actually return a number one less than max.
+ * @return {number}     this is the random number that is generated.
  */
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // Draw the enemy on the screen, required method for game
+
+/**
+ * Operates on an instance of the Enemy object and renders that instance on the screen.
+ * @return {n/a}    - This method does not return any values. 
+ */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
+/**
+ * Class Player: This is the Player class.  Our player must avoid Enemies or else they lose a life. 
+ * The job of the Player is to move around the board avoiding enemies and making it to the water tiles
+ * where they will earn points and respawn back at the grass tiles. 
+ * 
+ * @class Player
+ * @classdesc A generic player.
+ * @property {Array.<number>} respawnLoc    - An array that stores the x and y coordinates of where the player will respawn after 
+ *                                          reaching the water tiles.
+ * @property {number} VERTICAL_HOPS         - The vertical pixels this player can jump when moving up or down
+ * @property {number} HORIZONTAL_HOPS       - The horizontal pixels this player can jump when moving left or right
+ * @property {int} x                        - The current horizontal value on the canvas (the x coordinate).
+ * @property {int} y                        - The current vertical value on the canvas (the y coordinate).
+ * @property {Array.<number>} boardLoc      - The current location on the grid where the Player is. Stores a location of the tile on
+ *                                          the map where the player currently is.  The map grid starts with the upper left most tile being 
+ *                                          at position zero, zero (0,0).
+ * @property {string} sprite                - The path to the image of this player. 
+ * @constructor
+ */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.respawnLoc = [200, 380];
@@ -138,71 +164,103 @@ var Player = function() {
     this.x = this.respawnLoc[0];
     this.y = this.respawnLoc[1];
 
-    this.vHops = 81;
-    this.hHops = 100;
+    this.VERTICAL_HOPS = 81;
+    this.HORIZONTAL_HOPS = 100;
     this.boardLoc = getBoardLoc(this.x, this.y);
-    // generic class for a player.
 }
 
+/**
+ * Operates on an instance of Player object and updates and properties associated with that instnace.
+ *
+ * @param {number}  dt  The dt parameter will ensure the game runs at the same speed for all computers.
+ * 
+ * @return {n/a} this method does not return any values.
+ */
 Player.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    this.boardLoc = getBoardLoc(this.x, this.y);
-    //console.log("playerLocation: " + this.boardLoc);
+    this.boardLoc = getBoardLoc(this.x, this.y);    
 }
 
+/**
+ * Operates on an instance of the Player object and renders that instance to the screen.
+ * @return {n/a} - this method does not return any values.
+ */
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 }
 
+/**
+ * Operates on an instance of the Player object and moves the player to the respawn location defined 
+ * in the Player object.
+ * @return {n/a} - This method does not return any values. 
+ */
 Player.prototype.respawn = function() {
     if (scoreboard.lives > 0) {
         this.x = this.respawnLoc[0];
         this.y = this.respawnLoc[1];
         scoreboard.decrement();
     } else {
-        // todo: call a function that ends the game
+        // todo: call a function that ends the game because the player has lost all the lives
+        // that have been alloted to them.
     }
 }
 
+/**
+ * Operates on an instace of the Player object and calls the scoreboard's increment method (to 
+ * increase the score) and then moves the player back to the grass tile in the same horizontal
+ * position that they are currently in.  This method is called when a player reaches one of the 
+ * water tiles.
+ * @return {n/a} - this method does not return any values.
+ */
 Player.prototype.achievement = function() {
     this.y = 380;
     scoreboard.increment();
 
 }
 
+/**
+ * Operates on an instance of of the Player object and takes action based on the key that was
+ * pressed on the keyboard as input.
+ * @param  {string} input - passed from the keyup event to incidate which key was pressed.
+ * @return {n/a}       [description]
+ */
 Player.prototype.handleInput = function(input) {
     //todo: need to figure out how to not make these values hard coded as limits. 
     switch (input) {
         case 'up':
-            if (this.y > 57) {
-                this.y = this.y - this.vHops;
+            if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
+                this.y = this.y - this.VERTICAL_HOPS;
             } else {
                 player.achievement();
             }
             break;
         case 'down':
             if (this.y < 380) {
-                this.y = this.y + this.vHops;
-            } else { /* do nothing */ }
+                this.y = this.y + this.VERTICAL_HOPS;
+            } else { /* do nothing - cannot move below the bottom tile. */ }
             break;
         case 'left':
             if (this.x > 0) {
-                this.x = this.x - this.hHops;
-            } else { /* do nothing */ }
+                this.x = this.x - this.HORIZONTAL_HOPS;
+            } else { /* do nothing - cannot move past the left tile. */ }
             break;
         case 'right':
             if (this.x < 400) {
-                this.x = this.x + this.hHops;
-            } else { /* do nothing */ }
+                this.x = this.x + this.HORIZONTAL_HOPS;
+            } else { /* do nothing - cannot move past the right tile. */ }
             break;
     }
-
-
 }
 
+/**
+ * This is a helper function.  It takes an x and y value (cooardinates on the canvas) and returns
+ * a grid location based on tiles. 
+ * @param  {number} x horizontal coordinate on the board.
+ * @param  {number} y vertical coordinate on the board.
+ * @return {Array.<number>}   Location on grid counting each tile as a position with the upper
+ *                                     most left position on the grid being 0,0 increasing as 
+ *                                     you move out from there.
+ */
 function getBoardLoc(x, y) {
     var myBoardLoc = [];
 
@@ -214,17 +272,17 @@ function getBoardLoc(x, y) {
 }
 
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+/**
+ * Instantiate the objects in the game. All enemy objects are placed in an array called allEnemies.
+ * The player object is placed into a variable called player.  This is per the inscructions given
+ * for this project. 
+ */
 var allEnemies = [];
 for (i = 0; i < 3; i++) {
     allEnemies.push(new Enemy());
 }
-
 var player = new Player();
 var scoreboard = new ScoreBoard();
-
 
 
 // This listens for key presses and sends the keys to your
