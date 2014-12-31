@@ -1,6 +1,14 @@
 // global variables scoped to app.js
-var hCenter = canvas.width / 2 ;
-var vCenter = canvas.height / 2 ;
+var hCenter, vCenter, tileWidth, tileHeight, startingLives, scoreIncrement;
+ 
+function configApp() {
+    hCenter = canvas.width / 2 ;
+    vCenter = canvas.height / 2 ;
+    tileWidth = 101;
+    tileHeight = 83;
+    startingLives = 5;
+    scoreIncrement = 100
+}
 
 /**
  * A random integer generator.
@@ -26,8 +34,8 @@ function getRandomInt(min, max) {
 function getBoardLoc(x, y) {
     var myBoardLoc = [];
 
-    myBoardLoc.push(Math.ceil((x) / 100));
-    myBoardLoc.push(Math.ceil((y) / 81));
+    myBoardLoc.push(Math.ceil((x) / tileWidth));
+    myBoardLoc.push(Math.ceil((y) / tileHeight));
 
     return myBoardLoc;
 
@@ -58,7 +66,7 @@ var ScoreBoard = function() {
     this.GAME_SCORE_TEXT = " Score: ";
     this.gameOverText = ["GAME OVER!!!","Press the 'R' key","to","start the game over"];
     this.score = 0;
-    this.lives = 1;
+    this.lives = startingLives;
     this.textX = 0;
     this.textY = 40;
     this.rectX = 0;
@@ -148,7 +156,7 @@ ScoreBoard.prototype.update = function(dt) {
  * @return {n/a} this method does not return any values.
  */
 ScoreBoard.prototype.increment = function() {
-    this.score = this.score + 100;
+    this.score = this.score + scoreIncrement;
 }
 
 /*

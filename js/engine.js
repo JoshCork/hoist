@@ -66,6 +66,7 @@ var Engine = (function(global) {
     function init() {
         //reset();
         lastTime = Date.now();
+        configApp();
         main();
     }
 
@@ -201,4 +202,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.canvas = canvas;
 })(this);
