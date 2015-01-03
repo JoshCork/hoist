@@ -1,13 +1,41 @@
-// global variables scoped to app.js
-var hCenter, vCenter, tileWidth, tileHeight, startingLives, scoreIncrement;
- 
+// variables scoped to app.js and used throughout the script.
+/**
+ * @var {number} hCenter This is the horizontal center of the canvas.
+ * @var {number} vCenter This is the vertical center of the canvas.
+ * @var {number} cWidth         - This is the canvas width.
+ * @var {number} cHeight        - This is the canvas height.
+ * @var {number} tileWidth      - This is the width of an individual tile.
+ * @var {number} tileHeight     - This is the height of an individual tile (after the overlap). 
+ * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game. 
+ * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile. 
+ * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen. 
+ */
+var hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
+
+/**
+ * This is a helper function called once when the app is loaded to set all the variables that get used throughout
+ * the app. 
+ * 
+ * @return {n/a} this function does not return any values. 
+ */
 function configApp() {
-    hCenter = canvas.width / 2 ;
-    vCenter = canvas.height / 2 ;
+    if (typeof canvas === 'undefined') {
+        cWidth = 505
+    } else {
+        cWidth = canvas.width
+    };
+    if (typeof canvas === 'undefined') {
+        cHeight = 606
+    } else {
+        cHeight = canvas.height
+    };
+    hCenter = cWidth / 2;
+    vCenter = cHeight / 2;
     tileWidth = 101;
     tileHeight = 83;
+    scoreIncrement = 100;
     startingLives = 5;
-    scoreIncrement = 100
+    enemyCount = 4;
 }
 
 /**
@@ -64,7 +92,7 @@ function getBoardLoc(x, y) {
 var ScoreBoard = function() {
     this.LIVES_TEXT = "Lives: ";
     this.GAME_SCORE_TEXT = " Score: ";
-    this.gameOverText = ["GAME OVER!!!","Press the 'R' key","to","start the game over"];
+    this.gameOverText = ["GAME OVER!!!", "Press the 'R' key", "to", "start the game over"];
     this.score = 0;
     this.lives = startingLives;
     this.textX = 0;
@@ -72,7 +100,7 @@ var ScoreBoard = function() {
     this.rectX = 0;
     this.rectY = -5;
     this.rectHeight = 50;
-    this.rectWidth = 505;
+    this.rectWidth = cWidth;
 }
 
 /*
@@ -102,17 +130,17 @@ ScoreBoard.prototype.render = function() {
         ctx.fillRect(102, 133, 300, 250);
         ctx.fillStyle = 'white';
         ctx.textAlign = "center";
-        ctx.font = "32pt Impact";
-        ctx.fillText(this.gameOverText[1], 255, 200);
-        ctx.strokeText(this.gameOverText[1], 255, 200);
-        ctx.fillText(this.gameOverText[2], 255, 250);
-        ctx.strokeText(this.gameOverText[2], 255, 250);
-        ctx.fillText(this.gameOverText[3], 255, 300);
-        ctx.strokeText(this.gameOverText[3], 255, 300);
+        ctx.font = "26pt Impact";
+        ctx.fillText(this.gameOverText[1], hCenter, 200);
+        ctx.strokeText(this.gameOverText[1], hCenter, 200);
+        ctx.fillText(this.gameOverText[2], hCenter, 250);
+        ctx.strokeText(this.gameOverText[2], hCenter, 250);
+        ctx.fillText(this.gameOverText[3], hCenter, 300);
+        ctx.strokeText(this.gameOverText[3], hCenter, 300);
 
         ctx.font = "36pt Impact";
-        ctx.fillText(this.gameOverText[0], 255, 40);
-        ctx.strokeText(this.gameOverText[0], 255, 40);
+        ctx.fillText(this.gameOverText[0], hCenter, 40);
+        ctx.strokeText(this.gameOverText[0], hCenter, 40);
     }
 
 
@@ -120,7 +148,7 @@ ScoreBoard.prototype.render = function() {
 
 /**
  * Operates on an instance of the ScoreBoard object and updates the properties associated with that instance of the object.
- * @param  {number} dt datetime offset that ensures all computers run the game at the same speed. 
+ * @param  {number} dt datetime offset that ensures all computers run the game at the same speed.
  * @return {n/a}    this method does not return any values.
  */
 ScoreBoard.prototype.update = function(dt) {
@@ -128,23 +156,24 @@ ScoreBoard.prototype.update = function(dt) {
     /**
      * determines if the game has ended. If it has (lives <= zero) this updates the rendering of the scoreboard to drop
      * it down onto the center of the screen and then display game over at the top once it has reached the middle of the
-     * screen.  
+     * screen.
      * @param  {number} this.lives > 0  from the instance of the scoreboard that has been created for this game.
      */
     if (this.lives > 0) {
         //do nothing - no need to update the render values. 
-    
+
     } else if (this.lives === 0) {
 
         this.rectY = this.rectY + (50 * dt);
         this.textY = this.textY + (50 * dt);
 
-        if (this.rectY >= 300) {
+        // move the lives / score half way down the screen then stop.    
+        if (this.rectY >= vCenter) {
             this.lives = -1;
         }
 
     } else {
-        
+
         // do nothing
 
     }
@@ -210,7 +239,7 @@ var Enemy = function() {
  */
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by t
-    if (this.x < 600) {
+    if (this.x < cWidth) {
         this.x = this.x + (this.speed * dt);
     } else {
         this.x = -50;
@@ -299,7 +328,7 @@ Player.prototype.respawn = function() {
  * @return {n/a} - this method does not return any values.
  */
 Player.prototype.achievement = function() {
-    this.y = 380;
+    this.y = this.respawnLoc[1];
     scoreboard.increment();
 
 }
@@ -325,7 +354,7 @@ Player.prototype.handleInput = function(input) {
                 }
                 break;
             case 'down':
-                if (this.y < 380) {
+                if (this.y < this.respawnLoc[1]) {
                     this.y = this.y + this.VERTICAL_HOPS;
                 } else { /* do nothing - cannot move below the bottom tile. */ }
                 break;
@@ -339,15 +368,15 @@ Player.prototype.handleInput = function(input) {
                     this.x = this.x + this.HORIZONTAL_HOPS;
                 } else { /* do nothing - cannot move past the right tile. */ }
                 break;
-            
+
 
         }
-    } else { 
-        if (input === 'reset') {                    
-                    player = new Player();
-                    scoreboard = new ScoreBoard();
+    } else {
+        if (input === 'reset') {
+            player = new Player();
+            scoreboard = new ScoreBoard();
         } else { /* do nothing - cannot move until game has been reset. */ }
-        
+
     }
 }
 
@@ -356,8 +385,9 @@ Player.prototype.handleInput = function(input) {
  * The player object is placed into a variable called player.  This is per the inscructions given
  * for this project.
  */
+configApp();
 var allEnemies = [];
-for (i = 0; i < 3; i++) {
+for (i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 }
 var player = new Player();
