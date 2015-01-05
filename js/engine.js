@@ -64,8 +64,9 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        //reset();
         lastTime = Date.now();
+        configApp();
         main();
     }
 
@@ -85,10 +86,15 @@ var Engine = (function(global) {
 
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
-            if (enemy.boardLoc[0] === player.boardLoc[0] && enemy.boardLoc[1] === player.boardLoc[1] ) {
+            if (enemy.boardLoc[0] === player.boardLoc[0] && enemy.boardLoc[1] === player.boardLoc[1]) {
                 console.log("COLLISION!!!!!!!");
-                player.respawn();
-
+                if (scoreboard.lives > 0) {
+                    player.respawn();
+                } else {
+                    // todo: call a function that ends the game because the player has lost all the lives
+                    // that have been alloted to them.
+                    //reset();
+                }
             } else {
                 // do nothing, you are safe.             
             }
@@ -109,6 +115,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        scoreboard.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -149,8 +156,7 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
+        
         renderEntities();
     }
 
@@ -165,7 +171,6 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
         scoreboard.render();
     }
@@ -176,6 +181,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -196,4 +202,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.canvas = canvas;
 })(this);
