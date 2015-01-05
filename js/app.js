@@ -380,6 +380,18 @@ Player.prototype.handleInput = function(input) {
     }
 }
 
+
+var CatGirl = function() {
+    Player.call(this);
+    this.sprite = 'images/char-cat-girl.png';
+
+    this.VERTICAL_HOPS = 162;
+    this.HORIZONTAL_HOPS = 100;
+}
+
+CatGirl.prototype = Object.create(Player.prototype);
+CatGirl.prototype.constructor = CatGirl;
+
 /**
  * Instantiate the objects in the game. All enemy objects are placed in an array called allEnemies.
  * The player object is placed into a variable called player.  This is per the inscructions given
@@ -390,7 +402,8 @@ var allEnemies = [];
 for (i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 }
-var player = new Player();
+var player = new CatGirl();
+
 var scoreboard = new ScoreBoard();
 
 
