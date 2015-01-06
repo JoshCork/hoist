@@ -35,7 +35,7 @@ function configApp() {
     tileHeight = 83;
     scoreIncrement = 100;
     startingLives = 5;
-    enemyCount = 4;
+    enemyCount = 3;
 }
 
 /**
