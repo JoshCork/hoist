@@ -447,31 +447,39 @@ canvas.addEventListener("mouseup", function(e) {
 
 
 var UIObject = function() {
-    this.theObj = {
-    intersects: function(obj, mouse) {
-        var t = 5; // this is the tolerance limit.
-        var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.y && (mouse.y - t) < obj.y + obj.height;
-        return xIntersect && yIntersect;
-    },
+    //console.log("in UIObject");
+}
 
-    updateStats: function(){
-        console.log("in updateStats"); 
-        console.log("this: " + this );
-        if (this.theObj.intersects(this, canvas.mouse)) {
+UIObject.prototype.intersects =  function(obj, mouse) {
+        // console.log("in intersects");
+        var t = 5; // this is the tolerance limit.
+        var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.x + obj.width; // is the mouse's x value between the objects x + width value (given a tollerance)
+        var yIntersect = (mouse.y + t) > obj.y && (mouse.y - t) < obj.y + obj.height; // is the mouse's y value between the objects y + height value (given a tollerance)
+        
+        if (xIntersect && yIntersect) {
+        console.log("xIntersect = " + xIntersect);
+        console.log("yIntersect = " + yIntersect);
+        }
+        return xIntersect && yIntersect;
+    }
+
+UIObject.prototype.updateStats = function() {
+        // console.log("in updateStats"); 
+        // console.log("this: " + this );
+        // console.log("canvas.mouse: " + ctx.mouse);
+        if (this.intersects(this, ctx.mouse)) {
             this.hovered = true;
-            if (canvas.mouse.clicked) {
+            if (ctx.mouse.clicked) {
                 this.clicked = true;
             }
         } else { 
             this.hovered = false;
         }
 
-        if (!canvas.mouse.down) {
+        if (!ctx.mouse.down) {
             this.clicked = false;
         }
     }
-    };
-}
 
 
 var Button = function(text, x, y, width, height) {
@@ -488,11 +496,41 @@ Button.prototype = Object.create(UIObject.prototype);
 Button.prototype.constructor = Button;
 
 Button.prototype.draw = function() {    
+    // ctx.font = "36pt Impact";
+    // ctx.textAlign = "left";
+    // ctx.strokeStyle = 'black';
+    // ctx.line = 3;
+    // ctx.fillStyle = 'white';
+
+    // if (this.lives >= 0) {
+    //     ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
+    //     ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
+    //     ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
+    // } else {
+    //     ctx.fillStyle = 'rgba(255,221,50,.50)'
+    //     ctx.fillRect(102, 133, 300, 250);
+    //     ctx.fillStyle = 'white';
+    //     ctx.textAlign = "center";
+    //     ctx.font = "26pt Impact";
+    //     ctx.fillText(this.gameOverText[1], hCenter, 200);
+    //     ctx.strokeText(this.gameOverText[1], hCenter, 200);
+    //     ctx.fillText(this.gameOverText[2], hCenter, 250);
+    //     ctx.strokeText(this.gameOverText[2], hCenter, 250);
+    //     ctx.fillText(this.gameOverText[3], hCenter, 300);
+    //     ctx.strokeText(this.gameOverText[3], hCenter, 300);
+
+    //     ctx.font = "36pt Impact";
+    //     ctx.fillText(this.gameOverText[0], hCenter, 40);
+    //     ctx.strokeText(this.gameOverText[0], hCenter, 40);
+
+
+
+
     //set color
     if (this.hovered) {
-        ctx.fillRect(0.3,0.7,0.6,1.0);
+        ctx.fillStyle = "blue";
     } else {
-        ctx.fillRect(0.2,0.6,0.5,1.0);
+        ctx.fillStyle = "red";
     }
 
     //draw button
@@ -500,8 +538,9 @@ Button.prototype.draw = function() {
 
     // text options
     var fontSize = 20;
-    ctx.fillRect(1,1,1,1.0);
-    canvas.font = fontSize + "px sans-serif";
+    ctx.fillStyle = 'white';
+    ctx.textAlign = "center";
+    ctx.font = fontSize + "pt Impact";     
 
     // text position
     var textSize = ctx.measureText(this.text);
@@ -510,6 +549,17 @@ Button.prototype.draw = function() {
 
     // draw the text
     ctx.fillText(this.text, textX, textY);
+}
+
+Button.prototype.update = function() {
+    var wasNotClicked = !this.clicked;
+    this.updateStats();
+
+    if (this.clicked && wasNotClicked) {
+        if(!_.isUndefined(this.handler)) {
+            this.handler();
+        }
+    }
 }
 
 
@@ -526,7 +576,7 @@ for (i = 0; i < enemyCount; i++) {
 var player = new CatGirl();
 
 var scoreboard = new ScoreBoard();
-var alertButton = new Button("Alert", hCenter,vCenter,160,40);
+var alertButton = new Button("Alert", 200,200,200,100);
 alertButton.timesClicked = 0;
 alertButton.handler = function() {
     this.timesClicked++;
