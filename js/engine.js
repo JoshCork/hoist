@@ -67,6 +67,7 @@ var Engine = (function(global) {
         //reset();
         lastTime = Date.now();
         configApp();
+        listenForMouse();
         main();
     }
 
@@ -173,6 +174,7 @@ var Engine = (function(global) {
         });
         player.render();
         scoreboard.render();
+        alertButton.draw();
     }
 
     /* This function does nothing but it could have been a good place to

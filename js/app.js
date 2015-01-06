@@ -7,7 +7,6 @@
  * @var {number} tileWidth      - This is the width of an individual tile.
  * @var {number} tileHeight     - This is the height of an individual tile (after the overlap). 
  * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game. 
- * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile. 
  * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen. 
  */
 var hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
@@ -32,8 +31,7 @@ function configApp() {
     hCenter = cWidth / 2;
     vCenter = cHeight / 2;
     tileWidth = 101;
-    tileHeight = 83;
-    scoreIncrement = 100;
+    tileHeight = 83;    
     startingLives = 5;
     enemyCount = 4;
 }
@@ -184,8 +182,8 @@ ScoreBoard.prototype.update = function(dt) {
  * 100 each time it is called.
  * @return {n/a} this method does not return any values.
  */
-ScoreBoard.prototype.increment = function() {
-    this.score = this.score + scoreIncrement;
+ScoreBoard.prototype.increment = function(score) {
+    this.score = this.score + score;
 }
 
 /*
@@ -329,7 +327,7 @@ Player.prototype.respawn = function() {
  */
 Player.prototype.achievement = function() {
     this.y = this.respawnLoc[1];
-    scoreboard.increment();
+    scoreboard.increment(100);
 
 }
 
@@ -392,20 +390,10 @@ var CatGirl = function() {
 CatGirl.prototype = Object.create(Player.prototype);
 CatGirl.prototype.constructor = CatGirl;
 
-/**
- * Instantiate the objects in the game. All enemy objects are placed in an array called allEnemies.
- * The player object is placed into a variable called player.  This is per the inscructions given
- * for this project.
- */
-configApp();
-var allEnemies = [];
-for (i = 0; i < enemyCount; i++) {
-    allEnemies.push(new Enemy());
+CatGirl.prototype.achievement = function() {
+    this.y = this.respawnLoc[1];
+    scoreboard.increment(50);
 }
-var player = new CatGirl();
-
-var scoreboard = new ScoreBoard();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -420,3 +408,127 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+/*
+Mouse Event listener
+ */
+
+function listenForMouse() {
+
+console.log("in listen for mouse");
+
+ctx.mouse = {
+    x: 0,
+    y: 0,
+    clicked: false,
+    down: false
+};
+
+canvas.addEventListener("mousemove", function(e) {
+    ctx.mouse.x = e.offsetX;
+    ctx.mouse.y = e.offsetY;
+    ctx.mouse.clicked = (e.which == 1 && !ctx.mouse.down);
+    ctx.mouse.down = (e.which == 1);
+    console.log("mouse move");
+});
+
+canvas.addEventListener("mousedown", function(e) {
+    ctx.mouse.clicked = !ctx.mouse.down;
+    ctx.mouse.down = true;
+    console.log("mouse down");
+});
+
+canvas.addEventListener("mouseup", function(e) {
+    ctx.mouse.down = false;
+    ctx.mouse.clicked = false;
+    console.log("mouse up. x: " + ctx.mouse.x + " y: " + ctx.mouse.y);
+}); 
+}
+
+
+var UIObject = function() {
+    this.theObj = {
+    intersects: function(obj, mouse) {
+        var t = 5; // this is the tolerance limit.
+        var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.y && (mouse.y - t) < obj.y + obj.height;
+        return xIntersect && yIntersect;
+    },
+
+    updateStats: function(){
+        console.log("in updateStats"); 
+        console.log("this: " + this );
+        if (this.theObj.intersects(this, canvas.mouse)) {
+            this.hovered = true;
+            if (canvas.mouse.clicked) {
+                this.clicked = true;
+            }
+        } else { 
+            this.hovered = false;
+        }
+
+        if (!canvas.mouse.down) {
+            this.clicked = false;
+        }
+    }
+    };
+}
+
+
+var Button = function(text, x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.clicked = false;
+    this.hovered = false;
+    this.text = text;
+}
+
+Button.prototype = Object.create(UIObject.prototype);
+Button.prototype.constructor = Button;
+
+Button.prototype.draw = function() {    
+    //set color
+    if (this.hovered) {
+        ctx.fillRect(0.3,0.7,0.6,1.0);
+    } else {
+        ctx.fillRect(0.2,0.6,0.5,1.0);
+    }
+
+    //draw button
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+
+    // text options
+    var fontSize = 20;
+    ctx.fillRect(1,1,1,1.0);
+    canvas.font = fontSize + "px sans-serif";
+
+    // text position
+    var textSize = ctx.measureText(this.text);
+    var textX = this.x + (this.width / 2) - (textSize.width / 2);
+    var textY = this.y + (this.height / 2) - (fontSize / 2);
+
+    // draw the text
+    ctx.fillText(this.text, textX, textY);
+}
+
+
+/**
+ * Instantiate the objects in the game. All enemy objects are placed in an array called allEnemies.
+ * The player object is placed into a variable called player.  This is per the inscructions given
+ * for this project.
+ */
+configApp();
+var allEnemies = [];
+for (i = 0; i < enemyCount; i++) {
+    allEnemies.push(new Enemy());
+}
+var player = new CatGirl();
+
+var scoreboard = new ScoreBoard();
+var alertButton = new Button("Alert", hCenter,vCenter,160,40);
+alertButton.timesClicked = 0;
+alertButton.handler = function() {
+    this.timesClicked++;
+    alert("This button has been clicked " + this.timesClicked + " time(s)!");
+};
