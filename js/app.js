@@ -5,18 +5,18 @@
  * @var {number} cWidth         - This is the canvas width.
  * @var {number} cHeight        - This is the canvas height.
  * @var {number} tileWidth      - This is the width of an individual tile.
- * @var {number} tileHeight     - This is the height of an individual tile (after the overlap). 
- * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game. 
- * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile. 
- * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen. 
+ * @var {number} tileHeight     - This is the height of an individual tile (after the overlap).
+ * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game.
+ * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile.
+ * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen.
  */
 var hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
 
 /**
  * This is a helper function called once when the app is loaded to set all the variables that get used throughout
- * the app. 
- * 
- * @return {n/a} this function does not return any values. 
+ * the app.
+ *
+ * @return {n/a} this function does not return any values.
  */
 function configApp() {
     if (typeof canvas === 'undefined') {
@@ -339,14 +339,29 @@ Player.prototype.achievement = function() {
  * @param  {string} input - passed from the keyup event to incidate which key was pressed.
  * @return {n/a}       [description]
  */
-Player.prototype.handleInput = function(input) {
-    //todo: need to figure out how to not make these values hard coded as limits. 
-    console.log(input);
-    console.log(scoreboard.lives);
-    console.log(scoreboard.lives < 0);
+Player.prototype.handleInput = function(e) {
+
+    console.log(e);
+
+    e.preventDefault();
+
+    var input
+    , allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
+        82: 'reset',
+    };
+
+    input = allowedKeys[e.keyCode];
+
+
+
     if (scoreboard.lives > 0) {
         switch (input) {
             case 'up':
+                e.preventDefault();
                 if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
                     this.y = this.y - this.VERTICAL_HOPS;
                 } else {
@@ -396,14 +411,10 @@ var scoreboard = new ScoreBoard();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    console.log(e);
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        82: 'reset',
-    };
-    player.handleInput(allowedKeys[e.keyCode]);
+// I know I didn't have to modify this but it seems more fun to
+// play when you can just hold down the key to make the player move.
+// Also I needed to watch for a keydown to prevent the browser from 
+// scrolling when I placed this on a long page. 
+document.addEventListener('keydown', function(e) {
+    player.handleInput(e);
 });
