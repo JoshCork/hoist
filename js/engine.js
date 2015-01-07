@@ -116,7 +116,8 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-        alertButton.update();
+        playerOneButton.update();
+        playerTwoButton.update();
         scoreboard.update(dt);
     }
 
@@ -175,7 +176,8 @@ var Engine = (function(global) {
         });
         player.render();
         scoreboard.render();
-        alertButton.draw();
+        playerOneButton.draw();
+        playerTwoButton.draw();
     }
 
     /* This function does nothing but it could have been a good place to

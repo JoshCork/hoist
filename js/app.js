@@ -496,36 +496,6 @@ Button.prototype = Object.create(UIObject.prototype);
 Button.prototype.constructor = Button;
 
 Button.prototype.draw = function() {    
-    // ctx.font = "36pt Impact";
-    // ctx.textAlign = "left";
-    // ctx.strokeStyle = 'black';
-    // ctx.line = 3;
-    // ctx.fillStyle = 'white';
-
-    // if (this.lives >= 0) {
-    //     ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
-    //     ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
-    //     ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
-    // } else {
-    //     ctx.fillStyle = 'rgba(255,221,50,.50)'
-    //     ctx.fillRect(102, 133, 300, 250);
-    //     ctx.fillStyle = 'white';
-    //     ctx.textAlign = "center";
-    //     ctx.font = "26pt Impact";
-    //     ctx.fillText(this.gameOverText[1], hCenter, 200);
-    //     ctx.strokeText(this.gameOverText[1], hCenter, 200);
-    //     ctx.fillText(this.gameOverText[2], hCenter, 250);
-    //     ctx.strokeText(this.gameOverText[2], hCenter, 250);
-    //     ctx.fillText(this.gameOverText[3], hCenter, 300);
-    //     ctx.strokeText(this.gameOverText[3], hCenter, 300);
-
-    //     ctx.font = "36pt Impact";
-    //     ctx.fillText(this.gameOverText[0], hCenter, 40);
-    //     ctx.strokeText(this.gameOverText[0], hCenter, 40);
-
-
-
-
     //set color
     if (this.hovered) {
         ctx.fillStyle = "blue";
@@ -544,8 +514,8 @@ Button.prototype.draw = function() {
 
     // text position
     var textSize = ctx.measureText(this.text);
-    var textX = this.x + (this.width / 2) - (textSize.width / 2);
-    var textY = this.y + (this.height / 2) - (fontSize / 2);
+    var textX = this.x + (this.width / 2) /*+ (textSize.width / 2)*/;
+    var textY = this.y + (this.height / 2) + (fontSize / 2);
 
     // draw the text
     ctx.fillText(this.text, textX, textY);
@@ -576,9 +546,10 @@ for (i = 0; i < enemyCount; i++) {
 var player = new CatGirl();
 
 var scoreboard = new ScoreBoard();
-var alertButton = new Button("Alert", 200,200,200,100);
-alertButton.timesClicked = 0;
-alertButton.handler = function() {
+var playerOneButton = new Button("Alert", tileWidth,tileHeight*3,100,50);
+var playerTwoButton = new Button("Alert", tileWidth*3,tileHeight*3,100,50);
+playerOneButton.timesClicked = 0;
+playerOneButton.handler = function() {
     this.timesClicked++;
     alert("This button has been clicked " + this.timesClicked + " time(s)!");
 };
