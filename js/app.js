@@ -446,91 +446,7 @@ canvas.addEventListener("mouseup", function(e) {
 }
 
 
-var UIObject = function() {
-    //console.log("in UIObject");
-}
 
-UIObject.prototype.intersects =  function(obj, mouse) {
-        // console.log("in intersects");
-        var t = 5; // this is the tolerance limit.
-        var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.x + obj.width; // is the mouse's x value between the objects x + width value (given a tollerance)
-        var yIntersect = (mouse.y + t) > obj.y && (mouse.y - t) < obj.y + obj.height; // is the mouse's y value between the objects y + height value (given a tollerance)
-        
-        if (xIntersect && yIntersect) {
-        console.log("xIntersect = " + xIntersect);
-        console.log("yIntersect = " + yIntersect);
-        }
-        return xIntersect && yIntersect;
-    }
-
-UIObject.prototype.updateStats = function() {
-        // console.log("in updateStats"); 
-        // console.log("this: " + this );
-        // console.log("canvas.mouse: " + ctx.mouse);
-        if (this.intersects(this, ctx.mouse)) {
-            this.hovered = true;
-            if (ctx.mouse.clicked) {
-                this.clicked = true;
-            }
-        } else { 
-            this.hovered = false;
-        }
-
-        if (!ctx.mouse.down) {
-            this.clicked = false;
-        }
-    }
-
-
-var Button = function(text, x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.clicked = false;
-    this.hovered = false;
-    this.text = text;
-}
-
-Button.prototype = Object.create(UIObject.prototype);
-Button.prototype.constructor = Button;
-
-Button.prototype.draw = function() {    
-    //set color
-    if (this.hovered) {
-        ctx.fillStyle = "blue";
-    } else {
-        ctx.fillStyle = "red";
-    }
-
-    //draw button
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-
-    // text options
-    var fontSize = 20;
-    ctx.fillStyle = 'white';
-    ctx.textAlign = "center";
-    ctx.font = fontSize + "pt Impact";     
-
-    // text position
-    var textSize = ctx.measureText(this.text);
-    var textX = this.x + (this.width / 2) /*+ (textSize.width / 2)*/;
-    var textY = this.y + (this.height / 2) + (fontSize / 2);
-
-    // draw the text
-    ctx.fillText(this.text, textX, textY);
-}
-
-Button.prototype.update = function() {
-    var wasNotClicked = !this.clicked;
-    this.updateStats();
-
-    if (this.clicked && wasNotClicked) {
-        if(!_.isUndefined(this.handler)) {
-            this.handler();
-        }
-    }
-}
 
 
 /**
@@ -546,10 +462,14 @@ for (i = 0; i < enemyCount; i++) {
 var player = new CatGirl();
 
 var scoreboard = new ScoreBoard();
-var playerOneButton = new Button("Alert", tileWidth,tileHeight*3,100,50);
-var playerTwoButton = new Button("Alert", tileWidth*3,tileHeight*3,100,50);
-playerOneButton.timesClicked = 0;
-playerOneButton.handler = function() {
+var catGirl = new PlayerButton("CatGirl", 0,tileHeight,'images/char-cat-girl.png');
+var littlBoy = new PlayerButton("lilBoy", tileWidth,tileHeight,'images/char-boy.png');
+var hornGirl = new PlayerButton("Horns", tileWidth*2,tileHeight,'images/char-horn-girl.png');
+var pingGirl = new PlayerButton("Pinky", tileWidth*3,tileHeight,'images/char-pink-girl.png');
+var princessGirl = new PlayerButton("Prin", tileWidth*4,tileHeight,'images/char-princess-girl.png');
+//var playerTwoButton = new Button("Alert", tileWidth*3,tileHeight*3,100,50);
+catGirl.timesClicked = 0;
+catGirl.handler = function() {
     this.timesClicked++;
     alert("This button has been clicked " + this.timesClicked + " time(s)!");
 };

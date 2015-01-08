@@ -116,8 +116,12 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-        playerOneButton.update();
-        playerTwoButton.update();
+        catGirl.update();
+        littlBoy.update();
+        hornGirl.update();
+        pingGirl.update();
+        princessGirl.update();
+
         scoreboard.update(dt);
     }
 
@@ -176,8 +180,11 @@ var Engine = (function(global) {
         });
         player.render();
         scoreboard.render();
-        playerOneButton.draw();
-        playerTwoButton.draw();
+        catGirl.render();
+        littlBoy.render();
+        hornGirl.render();
+        pingGirl.render();
+        princessGirl.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -206,7 +213,10 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/char-cat-girl.png'
+        'images/char-cat-girl.png',
+        'images/char-princess-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-horn-girl.png'        
     ]);
     Resources.onReady(init);
 
