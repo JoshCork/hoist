@@ -116,12 +116,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-        catGirl.update();
-        littlBoy.update();
-        hornGirl.update();
-        pingGirl.update();
-        princessGirl.update();
-
+        startBoard.update();
         scoreboard.update(dt);
     }
 
@@ -179,12 +174,9 @@ var Engine = (function(global) {
             enemy.render();
         });
         player.render();
+        startBoard.render();
         scoreboard.render();
-        catGirl.render();
-        littlBoy.render();
-        hornGirl.render();
-        pingGirl.render();
-        princessGirl.render();
+        
     }
 
     /* This function does nothing but it could have been a good place to

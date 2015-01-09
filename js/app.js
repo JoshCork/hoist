@@ -460,16 +460,12 @@ for (i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 }
 var player = new CatGirl();
-
+var startBoard = new StartBoard();
 var scoreboard = new ScoreBoard();
-var catGirl = new PlayerButton("CatGirl", 0,tileHeight,'images/char-cat-girl.png');
-var littlBoy = new PlayerButton("lilBoy", tileWidth,tileHeight,'images/char-boy.png');
-var hornGirl = new PlayerButton("Horns", tileWidth*2,tileHeight,'images/char-horn-girl.png');
-var pingGirl = new PlayerButton("Pinky", tileWidth*3,tileHeight,'images/char-pink-girl.png');
-var princessGirl = new PlayerButton("Prin", tileWidth*4,tileHeight,'images/char-princess-girl.png');
+
 //var playerTwoButton = new Button("Alert", tileWidth*3,tileHeight*3,100,50);
-catGirl.timesClicked = 0;
-catGirl.handler = function() {
-    this.timesClicked++;
-    alert("This button has been clicked " + this.timesClicked + " time(s)!");
-};
+// catGirl.timesClicked = 0;
+// catGirl.handler = function() {
+//     this.timesClicked++;
+//     alert("This button has been clicked " + this.timesClicked + " time(s)!");
+// };

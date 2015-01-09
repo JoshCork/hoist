@@ -34,6 +34,42 @@ UIObject.prototype.updateStats = function() {
         }
     }
 
+var StartBoard = function() {
+	// this object will be the background for new games.  It will contain some 
+	// text (instructions) for the users and visually contain the players that they can 
+	// choose from. 
+	
+	this.btnCatGirl = new PlayerButton("CatGirl", 0,tileHeight,'images/char-cat-girl.png');
+	this.btnLilBoy = new PlayerButton("lilBoy", tileWidth,tileHeight,'images/char-boy.png');
+	this.btnHorns = new PlayerButton("Horns", tileWidth*2,tileHeight,'images/char-horn-girl.png');
+	this.btnPinky = new PlayerButton("Pinky", tileWidth*3,tileHeight,'images/char-pink-girl.png');
+	this.btnPrin = new PlayerButton("Prin", tileWidth*4,tileHeight,'images/char-princess-girl.png');
+
+	this.allPlayerBtns = [this.btnCatGirl,this.btnLilBoy,this.btnHorns,this.btnPinky,this.btnPrin];
+
+}
+
+StartBoard.prototype = Object.create(UIObject.prototype);
+StartBoard.prototype.constructor = StartBoard;
+
+StartBoard.prototype.render = function() {
+	// this.btnCatGirl.render();
+	// this.btnLilBoy.render();
+	// this.btnHorns.render();
+	// this.btnPinky.render();
+	// this.btnPrin.render();	
+
+	this.allPlayerBtns.forEach(function(button) {
+            button.render();
+        });
+}
+
+StartBoard.prototype.update = function() {
+	// update the player based on which character is picked. 
+	this.allPlayerBtns.forEach(function(button) {
+            button.update();
+        });
+}
 
 var PlayerButton = function(text, x, y, spriteImage ) {
     this.x = x;
@@ -80,7 +116,7 @@ PlayerButton.prototype.render = function() {
 
 PlayerButton.prototype.update = function() {
     var wasNotClicked = !this.clicked;
-    this.updateStats();
+    this.updateStats();   
 
     if (this.clicked && wasNotClicked) {
         if(!_.isUndefined(this.handler)) {
