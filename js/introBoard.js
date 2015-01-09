@@ -124,3 +124,7 @@ PlayerButton.prototype.update = function() {
         }
     }
 }
+
+PlayerButton.prototype.handler = function() {
+	newPlayer(this.text);
+}
