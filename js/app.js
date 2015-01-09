@@ -91,6 +91,7 @@ var ScoreBoard = function() {
     this.LIVES_TEXT = "Lives: ";
     this.GAME_SCORE_TEXT = " Score: ";
     this.gameOverText = ["GAME OVER!!!", "Click on a player below to start over."];
+    this.gameStatus = 'new';
     this.score = 0;
     this.lives = startingLives;
     this.textX = 0;

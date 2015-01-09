@@ -111,7 +111,7 @@ Player.prototype.handleInput = function(input) {
 
 
         }
-    } else {
+    } else {    	
         if (input === 'reset') {
             player = new Player();
             scoreboard = new ScoreBoard();
