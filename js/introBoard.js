@@ -1,51 +1,48 @@
-
 var UIObject = function() {
     //console.log("in UIObject");
 }
 
-UIObject.prototype.intersects =  function(obj, mouse) {
-        // console.log("in intersects");
-        var t = 5; // this is the tolerance limit.
-        var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.x + obj.width; // is the mouse's x value between the objects x + width value (given a tollerance)
-        var yIntersect = (mouse.y + t) > obj.y && (mouse.y - t) < obj.y + obj.height; // is the mouse's y value between the objects y + height value (given a tollerance)
-        
-        if (xIntersect && yIntersect) {
-        console.log("xIntersect = " + xIntersect);
-        console.log("yIntersect = " + yIntersect);
-        }
-        return xIntersect && yIntersect;
-    }
+UIObject.prototype.intersects = function(obj, mouse) {
+    // console.log("in intersects");
+    var t = 5; // this is the tolerance limit.
+    var xIntersect = (mouse.x + t) > obj.x && (mouse.x - t) < obj.x + obj.width; // is the mouse's x value between the objects x + width value (given a tollerance)
+    var yIntersect = (mouse.y + t) > obj.y && (mouse.y - t) < obj.y + obj.height; // is the mouse's y value between the objects y + height value (given a tollerance)
+    
+    return xIntersect && yIntersect;
+}
 
 UIObject.prototype.updateStats = function() {
-        // console.log("in updateStats"); 
-        // console.log("this: " + this );
-        // console.log("canvas.mouse: " + ctx.mouse);
-        if (this.intersects(this, ctx.mouse)) {
-            this.hovered = true;
-            if (ctx.mouse.clicked) {
-                this.clicked = true;
-            }
-        } else { 
-            this.hovered = false;
+    // console.log("in updateStats"); 
+    // console.log("this: " + this );
+    // console.log("canvas.mouse: " + ctx.mouse);
+    if (this.intersects(this, ctx.mouse)) {
+        this.hovered = true;
+        if (ctx.mouse.clicked) {
+            this.clicked = true;
         }
-
-        if (!ctx.mouse.down) {
-            this.clicked = false;
-        }
+    } else {
+        this.hovered = false;
     }
 
-var StartBoard = function() {
-	// this object will be the background for new games.  It will contain some 
-	// text (instructions) for the users and visually contain the players that they can 
-	// choose from. 
-	
-	this.btnCatGirl = new PlayerButton("CatGirl", 0,tileHeight,'images/char-cat-girl.png');
-	this.btnLilBoy = new PlayerButton("lilBoy", tileWidth,tileHeight,'images/char-boy.png');
-	this.btnHorns = new PlayerButton("Horns", tileWidth*2,tileHeight,'images/char-horn-girl.png');
-	this.btnPinky = new PlayerButton("Pinky", tileWidth*3,tileHeight,'images/char-pink-girl.png');
-	this.btnPrin = new PlayerButton("Prin", tileWidth*4,tileHeight,'images/char-princess-girl.png');
+    if (!ctx.mouse.down) {
+        this.clicked = false;
+    }
+}
 
-	this.allPlayerBtns = [this.btnCatGirl,this.btnLilBoy,this.btnHorns,this.btnPinky,this.btnPrin];
+var StartBoard = function() {
+    // this object will be the background for new games.  It will contain some 
+    // text (instructions) for the users and visually contain the players that they can 
+    // choose from. 
+    
+    this.NEW_GAME_TEXT = ["Click on a player below to start the game.", "Your objective is to navigate the player to the water with out getting hit by a passing bug"]
+
+    this.btnCatGirl = new PlayerButton("CatGirl", 0, tileHeight * 5, 'images/char-cat-girl.png');
+    this.btnLilBoy = new PlayerButton("lilBoy", tileWidth, tileHeight * 5, 'images/char-boy.png');
+    this.btnHorns = new PlayerButton("Horns", tileWidth * 2, tileHeight * 5, 'images/char-horn-girl.png');
+    this.btnPinky = new PlayerButton("Pinky", tileWidth * 3, tileHeight * 5, 'images/char-pink-girl.png');
+    this.btnPrin = new PlayerButton("Prin", tileWidth * 4, tileHeight * 5, 'images/char-princess-girl.png');
+
+    this.allPlayerBtns = [this.btnCatGirl, this.btnLilBoy, this.btnHorns, this.btnPinky, this.btnPrin];
 
 }
 
@@ -53,25 +50,34 @@ StartBoard.prototype = Object.create(UIObject.prototype);
 StartBoard.prototype.constructor = StartBoard;
 
 StartBoard.prototype.render = function() {
-	// this.btnCatGirl.render();
-	// this.btnLilBoy.render();
-	// this.btnHorns.render();
-	// this.btnPinky.render();
-	// this.btnPrin.render();	
 
-	this.allPlayerBtns.forEach(function(button) {
+	// renders the player picker when lives are <= 0
+    if (scoreboard.lives <= 0) {
+    	ctx.fillStyle = "red";
+		ctx.fillRect(0, tileHeight*4, cWidth, tileHeight);
+		
+		var fontSize = 20;
+	    ctx.fillStyle = 'white';
+	    ctx.textAlign = "center";
+	    ctx.font = fontSize + "pt Impact";
+	    
+	    ctx.fillText(scoreboard.gameOverText[0], hCenter, (tileHeight*4)+tileHeight/2);
+	    ctx.fillText(scoreboard.gameOverText[1], hCenter, (tileHeight*4)+(tileHeight/2)+fontSize*1.5);
+
+        this.allPlayerBtns.forEach(function(button) {
             button.render();
         });
+    }
 }
 
 StartBoard.prototype.update = function() {
-	// update the player based on which character is picked. 
-	this.allPlayerBtns.forEach(function(button) {
-            button.update();
-        });
+    // update the player based on which character is picked. 
+    this.allPlayerBtns.forEach(function(button) {
+        button.update();
+    });
 }
 
-var PlayerButton = function(text, x, y, spriteImage ) {
+var PlayerButton = function(text, x, y, spriteImage) {
     this.x = x;
     this.y = y;
     this.width = 101;
@@ -85,7 +91,7 @@ var PlayerButton = function(text, x, y, spriteImage ) {
 PlayerButton.prototype = Object.create(UIObject.prototype);
 PlayerButton.prototype.constructor = PlayerButton;
 
-PlayerButton.prototype.render = function() {    
+PlayerButton.prototype.render = function() {
     //set color
     if (this.hovered) {
         ctx.fillStyle = "blue";
@@ -100,11 +106,11 @@ PlayerButton.prototype.render = function() {
     var fontSize = 20;
     ctx.fillStyle = 'white';
     ctx.textAlign = "center";
-    ctx.font = fontSize + "pt Impact";     
+    ctx.font = fontSize + "pt Impact";
 
     // text position
     var textSize = ctx.measureText(this.text);
-    var textX = this.x + (this.width / 2) /*+ (textSize.width / 2)*/;
+    var textX = this.x + (this.width / 2) /*+ (textSize.width / 2)*/ ;
     var textY = this.y + (this.height / 4) + (fontSize / 2);
 
     // render the sprite
@@ -116,15 +122,16 @@ PlayerButton.prototype.render = function() {
 
 PlayerButton.prototype.update = function() {
     var wasNotClicked = !this.clicked;
-    this.updateStats();   
+    this.updateStats();
 
     if (this.clicked && wasNotClicked) {
-        if(!_.isUndefined(this.handler)) {
+        if (!_.isUndefined(this.handler)) {
             this.handler();
         }
     }
 }
 
 PlayerButton.prototype.handler = function() {
-	newPlayer(this.text);
+    newPlayer(this.text);
+    scoreboard = new ScoreBoard();
 }

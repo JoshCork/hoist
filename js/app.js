@@ -90,7 +90,7 @@ function getBoardLoc(x, y) {
 var ScoreBoard = function() {
     this.LIVES_TEXT = "Lives: ";
     this.GAME_SCORE_TEXT = " Score: ";
-    this.gameOverText = ["GAME OVER!!!", "Press the 'R' key", "to", "start the game over"];
+    this.gameOverText = ["GAME OVER!!!", "Click on a player below to start over."];
     this.score = 0;
     this.lives = startingLives;
     this.textX = 0;
@@ -119,23 +119,13 @@ ScoreBoard.prototype.render = function() {
     ctx.line = 3;
     ctx.fillStyle = 'white';
 
-    if (this.lives >= 0) {
+    if (this.lives > 0) {
         ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
         ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
-    } else {
-        ctx.fillStyle = 'rgba(255,221,50,.50)'
-        ctx.fillRect(102, 133, 300, 250);
-        ctx.fillStyle = 'white';
-        ctx.textAlign = "center";
-        ctx.font = "26pt Impact";
-        ctx.fillText(this.gameOverText[1], hCenter, 200);
-        ctx.strokeText(this.gameOverText[1], hCenter, 200);
-        ctx.fillText(this.gameOverText[2], hCenter, 250);
-        ctx.strokeText(this.gameOverText[2], hCenter, 250);
-        ctx.fillText(this.gameOverText[3], hCenter, 300);
-        ctx.strokeText(this.gameOverText[3], hCenter, 300);
-
+    } else {      
+         
+        ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.font = "36pt Impact";
         ctx.fillText(this.gameOverText[0], hCenter, 40);
         ctx.strokeText(this.gameOverText[0], hCenter, 40);
@@ -157,24 +147,9 @@ ScoreBoard.prototype.update = function(dt) {
      * screen.
      * @param  {number} this.lives > 0  from the instance of the scoreboard that has been created for this game.
      */
-    if (this.lives > 0) {
-        //do nothing - no need to update the render values. 
-
-    } else if (this.lives === 0) {
-
-        this.rectY = this.rectY + (50 * dt);
-        this.textY = this.textY + (50 * dt);
-
-        // move the lives / score half way down the screen then stop.    
-        if (this.rectY >= vCenter) {
-            this.lives = -1;
-        }
-
-    } else {
-
-        // do nothing
-
-    }
+    
+    // Should diplay the score in the center here now? Render it as part of the start board.
+    
 }
 
 /*
@@ -328,9 +303,7 @@ function newPlayer(character) {
             break;       
         default :  
             player = new Player();
-    }
-
-    
+    }    
 }
 
 
@@ -349,7 +322,6 @@ for (i = 0; i < enemyCount; i++) {
 newPlayer('Prin');
 
 var startBoard = new StartBoard();
-
 var scoreboard = new ScoreBoard();
 
 //var playerTwoButton = new Button("Alert", tileWidth*3,tileHeight*3,100,50);
