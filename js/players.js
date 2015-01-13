@@ -81,9 +81,9 @@ Player.prototype.achievement = function() {
  */
 Player.prototype.handleInput = function(input) {
     //todo: need to figure out how to not make these values hard coded as limits. 
-    console.log(input);
-    console.log(scoreboard.lives);
-    console.log(scoreboard.lives < 0);
+    // console.log(input);
+    // console.log(scoreboard.lives);
+    // console.log(scoreboard.lives < 0);
     if (scoreboard.lives > 0) {
         switch (input) {
             case 'up':

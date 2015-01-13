@@ -1,3 +1,4 @@
+
 var UIObject = function() {
     //console.log("in UIObject");
 }
@@ -34,7 +35,7 @@ var StartBoard = function() {
     // text (instructions) for the users and visually contain the players that they can 
     // choose from. 
     
-    this.NEW_GAME_TEXT = ["Click on a player below to start the game.", "Your objective is to navigate the player to the water with out getting hit by a passing bug"]
+    this.NEW_GAME_TEXT = ["Click on a player below to start the game.", "Your objective is to navigate the player"," to the water with out getting hit"," by a passing bug!"]
 
     this.btnCatGirl = new PlayerButton("CatGirl", 0, tileHeight * 5, 'images/char-cat-girl.png');
     this.btnLilBoy = new PlayerButton("lilBoy", tileWidth, tileHeight * 5, 'images/char-boy.png');
@@ -52,17 +53,26 @@ StartBoard.prototype.constructor = StartBoard;
 StartBoard.prototype.render = function() {
 
 	// renders the player picker when lives are <= 0
-    if (scoreboard.lives <= 0) {
+    if (scoreboard.lives <= 0 || scoreboard.gameStatus === 'new') {
     	ctx.fillStyle = "red";
-		ctx.fillRect(0, tileHeight*4, cWidth, tileHeight);
+		ctx.fillRect(0, tileHeight*3, cWidth, tileHeight*2);
 		
 		var fontSize = 20;
 	    ctx.fillStyle = 'white';
 	    ctx.textAlign = "center";
 	    ctx.font = fontSize + "pt Impact";
-	    
-	    ctx.fillText(scoreboard.gameOverText[0], hCenter, (tileHeight*4)+tileHeight/2);
-	    ctx.fillText(scoreboard.gameOverText[1], hCenter, (tileHeight*4)+(tileHeight/2)+fontSize*1.5);
+
+	    if (scoreboard.gameStatus != 'new') {
+	    ctx.fillText(scoreboard.gameOverText[0], hCenter, (tileHeight*3)+tileHeight/2);
+	    ctx.fillText(scoreboard.gameOverText[1], hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*1.5);
+	    ctx.fillText("Previous Score: " + scoreboard.score, hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*4.5);
+	    } else {
+	    	ctx.fillText(this.NEW_GAME_TEXT[0], hCenter, (tileHeight*3)+tileHeight/2);
+	    	ctx.fillText(this.NEW_GAME_TEXT[1], hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*1.5);
+	    	ctx.fillText(this.NEW_GAME_TEXT[2], hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*3);
+	    	ctx.fillText(this.NEW_GAME_TEXT[3], hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*4.5);
+	    }
+
 
         this.allPlayerBtns.forEach(function(button) {
             button.render();
@@ -134,4 +144,5 @@ PlayerButton.prototype.update = function() {
 PlayerButton.prototype.handler = function() {
     newPlayer(this.text);
     scoreboard = new ScoreBoard();
+    scoreboard.gameStatus = "tryAgain";
 }
