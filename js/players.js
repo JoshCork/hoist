@@ -99,7 +99,7 @@ Player.prototype.handleInput = function(e) {
         switch (input) {
             case 'up':
                 e.preventDefault();
-                if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
+                if (this.y > this.VERTICAL_HOPS) { // anything less than 57 pixels means the player has made it to the water tile.
                     this.y = this.y - this.VERTICAL_HOPS;
                 } else {
                     player.achievement();
