@@ -9,10 +9,9 @@
  * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game. 
  * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile. 
  * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen. 
-
-
  */
 var player, hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
+
 
 /**
  * This is a helper function called once when the app is loaded to set all the variables that get used throughout
@@ -34,7 +33,7 @@ function configApp() {
     hCenter = cWidth / 2;
     vCenter = cHeight / 2;
     tileWidth = 101;
-    tileHeight = 83;    
+    tileHeight = 83;
     startingLives = 5;
     enemyCount = 3;
 }
@@ -127,8 +126,8 @@ ScoreBoard.prototype.render = function() {
         ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
         ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
-    } else {      
-         
+    } else {
+
         ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.font = "36pt Impact";
         ctx.fillText(this.gameOverText[0], hCenter, 40);
@@ -151,9 +150,9 @@ ScoreBoard.prototype.update = function(dt) {
      * screen.
      * @param  {number} this.lives > 0  from the instance of the scoreboard that has been created for this game.
      */
-    
+
     // Should diplay the score in the center here now? Render it as part of the start board.
-    
+
 }
 
 /*
@@ -236,131 +235,71 @@ Enemy.prototype.render = function() {
 
 
 
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keydown', function(e) {
-    console.log(e);
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        82: 'reset',
-    };
-    player.handleInput(allowedKeys[e.keyCode]);
-});
-
-/*
-Mouse Event listener
+/**
+ * This function listens for mouse movement on the screen.  It also detects
+ * clicking of the mouse.  When the mouse it clicked it captures the x and y coordinates
+ * and the status of the mouse click. 
+ * @return {n/a} this function does not return any values. 
  */
-
 function listenForMouse() {
 
-console.log("in listen for mouse");
+    console.log("in listen for mouse");
 
-ctx.mouse = {
-    x: 0,
-    y: 0,
-    clicked: false,
-    down: false
-};
+    ctx.mouse = {
+        x: 0,
+        y: 0,
+        clicked: false,
+        down: false
+    };
 
-canvas.addEventListener("mousemove", function(e) {
-    ctx.mouse.x = e.offsetX;
-    ctx.mouse.y = e.offsetY;
-    ctx.mouse.clicked = (e.which == 1 && !ctx.mouse.down);
-    ctx.mouse.down = (e.which == 1);
-    console.log("mouse move");
-});
+    canvas.addEventListener("mousemove", function(e) {
+        ctx.mouse.x = e.offsetX;
+        ctx.mouse.y = e.offsetY;
+        ctx.mouse.clicked = (e.which == 1 && !ctx.mouse.down);
+        ctx.mouse.down = (e.which == 1);
+    });
 
-canvas.addEventListener("mousedown", function(e) {
-    ctx.mouse.clicked = !ctx.mouse.down;
-    ctx.mouse.down = true;
-    console.log("mouse down");
-});
+    canvas.addEventListener("mousedown", function(e) {
+        ctx.mouse.clicked = !ctx.mouse.down;
+        ctx.mouse.down = true;
+    });
 
-canvas.addEventListener("mouseup", function(e) {
-    ctx.mouse.down = false;
-    ctx.mouse.clicked = false;
-    console.log("mouse up. x: " + ctx.mouse.x + " y: " + ctx.mouse.y);
-}); 
+    canvas.addEventListener("mouseup", function(e) {
+        ctx.mouse.down = false;
+        ctx.mouse.clicked = false;        
+    });
 }
+
 
 
 /**
- * Operates on an instance of of the Player object and takes action based on the key that was
- * pressed on the keyboard as input.
- * @param  {string} input - passed from the keyup event to incidate which key was pressed.
- * @return {n/a}       [description]
+ * This function is used to determine which character is going to be the
+ * active player in the game for this round.
+ * @param  {string} character name of the character that will be played in this round
+ * @return {n/a}           This function does not return any values.  It sets the player
+ *                              variable for the game.
  */
-Player.prototype.handleInput = function(e) {
-
-    console.log(e);    
-
-    var input
-    , allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        82: 'reset',
-    };
-
-    input = allowedKeys[e.keyCode];
-
-
-    if (scoreboard.lives > 0) {
-        switch (input) {
-            case 'up':
-                e.preventDefault();
-                if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
-                    this.y = this.y - this.VERTICAL_HOPS;
-                } else {
-                    player.achievement();
-                }
-                break;
-            case 'down':
-                if (this.y < this.respawnLoc[1]) {
-                    this.y = this.y + this.VERTICAL_HOPS;
-                } else { /* do nothing - cannot move below the bottom tile. */ }
-                break;
-            case 'left':
-                if (this.x > 0) {
-                    this.x = this.x - this.HORIZONTAL_HOPS;
-                } else { /* do nothing - cannot move past the left tile. */ }
-                break;
-            case 'right':
-                if (this.x < 400) {
-                    this.x = this.x + this.HORIZONTAL_HOPS;
-                } else { /* do nothing - cannot move past the right tile. */ }
-                break;
-        }
-    } else { /* do nothing */ }
-}
-
-
 function newPlayer(character) {
 
-    switch(character) {
-        case 'CatGirl' :
+    switch (character) {
+        case 'CatGirl':
             player = new CatGirl();
             break;
-        case 'lilBoy' :
+        case 'lilBoy':
             player = new LilBoy();
             break;
-        case 'Horns' :
+        case 'Horns':
             player = new Horns();
             break;
-        case 'Prin' :
+        case 'Prin':
             player = new Prin();
-            break;  
-        case 'Pinky' :
+            break;
+        case 'Pinky':
             player = new Pinky();
-            break;       
-        default :  
+            break;
+        default:
             player = new Player();
-    }    
+    }
 }
 
 
@@ -376,7 +315,7 @@ for (i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 }
 
-newPlayer('Prin');
+newPlayer('lilBoy');
 var startBoard = new StartBoard();
 var scoreboard = new ScoreBoard();
 
@@ -390,5 +329,3 @@ var scoreboard = new ScoreBoard();
 document.addEventListener('keydown', function(e) {
     player.handleInput(e);
 });
-
-

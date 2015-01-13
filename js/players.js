@@ -79,14 +79,26 @@ Player.prototype.achievement = function() {
  * @param  {string} input - passed from the keyup event to incidate which key was pressed.
  * @return {n/a}       [description]
  */
-Player.prototype.handleInput = function(input) {
-    //todo: need to figure out how to not make these values hard coded as limits. 
-    // console.log(input);
-    // console.log(scoreboard.lives);
-    // console.log(scoreboard.lives < 0);
+Player.prototype.handleInput = function(e) {
+
+    console.log(e);    
+
+    var input
+    , allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
+        82: 'reset',
+    };
+
+    input = allowedKeys[e.keyCode];
+
+
     if (scoreboard.lives > 0) {
         switch (input) {
             case 'up':
+                e.preventDefault();
                 if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
                     this.y = this.y - this.VERTICAL_HOPS;
                 } else {
@@ -108,36 +120,40 @@ Player.prototype.handleInput = function(input) {
                     this.x = this.x + this.HORIZONTAL_HOPS;
                 } else { /* do nothing - cannot move past the right tile. */ }
                 break;
-
-
         }
-    } else {    	
-        if (input === 'reset') {
-            player = new Player();
-            scoreboard = new ScoreBoard();
-        } else { /* do nothing - cannot move until game has been reset. */ }
-
-    }
+    } else { /* do nothing */ }
 }
 
 
+/**
+ * CatGirl Class --> Derives from Player.
+ * CatGirl can move two spaces on the board vertically as her 'special power'
+ * CatGirl also only gets half the points for an achievement.
+ * For Method explanation see Player
+ */
 var CatGirl = function() {
     Player.call(this);
     this.sprite = 'images/char-cat-girl.png';
 
-    this.VERTICAL_HOPS = 162;
+    this.VERTICAL_HOPS = 81*2;
     this.HORIZONTAL_HOPS = 100;
 }
 
+// inheritence
 CatGirl.prototype = Object.create(Player.prototype);
+// creates it's own constructor (as opposed to using the Player constructor)
 CatGirl.prototype.constructor = CatGirl;
 
+// see Player for general terms
 CatGirl.prototype.achievement = function() {
     this.y = this.respawnLoc[1];
     scoreboard.increment(50);
 }
 
-
+/**
+ * LilBoy Class --> Derives from Player. *
+ * For Method explanation see Player
+ */
 var LilBoy = function() {
     Player.call(this);
     this.sprite = 'images/char-boy.png';
@@ -154,12 +170,18 @@ LilBoy.prototype.achievement = function() {
     scoreboard.increment(100);
 }
 
+/**
+ * Horns Class --> Derives from Player.
+ * Horns can move two spaces on the board horizontally as her 'special power'
+ * Horns also only gets half the points for an achievement.
+ * For Method explanation see Player
+ */
 var Horns = function() {
     Player.call(this);
     this.sprite = 'images/char-horn-girl.png';
 
     this.VERTICAL_HOPS = 81;
-    this.HORIZONTAL_HOPS = 100;
+    this.HORIZONTAL_HOPS = 200;
 }
 
 Horns.prototype = Object.create(Player.prototype);
@@ -170,11 +192,17 @@ Horns.prototype.achievement = function() {
     scoreboard.increment(100);
 }
 
+/**
+ * Pinky Class --> Derives from Player.
+ * Pinky can move 1/4 spaces on the board vertically as her 'special power'
+ * Pinky also gets twice the points for an achievement.
+ * For Method explanation see Player
+ */
 var Pinky = function() {
     Player.call(this);
     this.sprite = 'images/char-pink-girl.png';
 
-    this.VERTICAL_HOPS = 22;
+    this.VERTICAL_HOPS = 81/4;
     this.HORIZONTAL_HOPS = 100;
 }
 
@@ -186,6 +214,12 @@ Pinky.prototype.achievement = function() {
     scoreboard.increment(300);
 }
 
+/**
+ * Prin Class --> Derives from Player.
+ * Prin can move 3 spaces on the board vertically as her 'special power'
+ * Prin also only gets 1/3 the points for an achievement.
+ * For Method explanation see Player
+ */
 var Prin = function() {
     Player.call(this);
     this.sprite = 'images/char-princess-girl.png';
@@ -199,5 +233,5 @@ Prin.prototype.constructor = Prin;
 
 Prin.prototype.achievement = function() {
     this.y = this.respawnLoc[1];
-    scoreboard.increment(100);
+    scoreboard.increment(33);
 }

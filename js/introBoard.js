@@ -1,8 +1,21 @@
 
+/**
+ * This is a generic user interface object that is used to have other objects derive from it's collision detection methods
+ */
 var UIObject = function() {
     //console.log("in UIObject");
 }
 
+/**
+ * Detects when the mouse is colliding with an object on the screen.
+ * @param  {object} obj   this is the button or rectangle or other object that was derived from this class that we are checking
+ *                        for a collision (or interesection) with.
+ * @param  {object} mouse tracks the mouse object (the pointer) position and if the mouse has been clicked or not. 
+ * @var {number} t the tolerance limit in pixesl (so if the mouse is w/in 5 pixes for example count it as an intersection).
+ * @var {boolean} xintersect checks for intersection along the horizontal plane     
+ * @var {boolean} yintersect checks for intersection along the vertical plane
+ * @return {boolean}       Returns true if the mouse is over a particular object w/in a given tollerence.   
+ */
 UIObject.prototype.intersects = function(obj, mouse) {
     // console.log("in intersects");
     var t = 5; // this is the tolerance limit.
@@ -12,10 +25,11 @@ UIObject.prototype.intersects = function(obj, mouse) {
     return xIntersect && yIntersect;
 }
 
+/**
+ * This function is called on each render and it calls the intersect function and does something based on clicking or overing when there is an intersection.
+ * @return {n/a} this function does not return any values it simply sets properties and those properties are used to render and / or do other things. 
+ */
 UIObject.prototype.updateStats = function() {
-    // console.log("in updateStats"); 
-    // console.log("this: " + this );
-    // console.log("canvas.mouse: " + ctx.mouse);
     if (this.intersects(this, ctx.mouse)) {
         this.hovered = true;
         if (ctx.mouse.clicked) {
@@ -30,13 +44,22 @@ UIObject.prototype.updateStats = function() {
     }
 }
 
-var StartBoard = function() {
-    // this object will be the background for new games.  It will contain some 
-    // text (instructions) for the users and visually contain the players that they can 
-    // choose from. 
-    
-    this.NEW_GAME_TEXT = ["Click on a player below to start the game.", "Your objective is to navigate the player"," to the water with out getting hit"," by a passing bug!"]
+/**
+ * StartBoard is a class that inherits from the UIObject Class.  
+ * This Class is used to store information about staarting the game.  It also instantiates other objects that inherit from the UIObject
+ * Class.  Specifically the buttons that are used to draw the characters. 
+ *
+ * @constant {Array, string} NEW_GAME_TEXT stores the text to be rendered out when the player starts a new game. 
+ * @property {PlayerButton} btnCatGirl the catGirl Button object.
+ * @property {PlayerButton} btnLilBoy the btnLilBoy Button object.
+ * @property {PlayerButton} btnHorns the btnHorns Button object.
+ * @property {PlayerButton} btnPinky the btnPinky Button object.
+ * @property {PlayerButton} btnPrin  the btnPrin Button object.
+ * @property {array,PlayerButton} allPlayerBtns an array that holds all the player buttons to later be iterated through. 
+ */
 
+var StartBoard = function() {    
+    this.NEW_GAME_TEXT = ["Click on a player below to start the game.", "Your objective is to navigate the player"," to the water with out getting hit"," by a passing bug!"]
     this.btnCatGirl = new PlayerButton("CatGirl", 0, tileHeight * 5, 'images/char-cat-girl.png');
     this.btnLilBoy = new PlayerButton("lilBoy", tileWidth, tileHeight * 5, 'images/char-boy.png');
     this.btnHorns = new PlayerButton("Horns", tileWidth * 2, tileHeight * 5, 'images/char-horn-girl.png');
@@ -47,9 +70,15 @@ var StartBoard = function() {
 
 }
 
+// inherits from the UIObject
 StartBoard.prototype = Object.create(UIObject.prototype);
+// creates it's own conscructor
 StartBoard.prototype.constructor = StartBoard;
 
+/**
+ * This method handels all the rendering of the startBoard.
+ * @return {n/a} this method does not return anything. 
+ */
 StartBoard.prototype.render = function() {
 
 	// renders the player picker when lives are <= 0
