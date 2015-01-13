@@ -2,7 +2,7 @@ frontend-nanodegree-arcade-game
 ===============================
 
 ## Instructions
-To play the game just point your browser at the index.html page at the root of this folder. 
+To play the game just point your browser at the index.html page at the root of this folder. I broke out some of the code in the original app.js into their own javascript files for easy of organization.
 
 ## Attribution
 I used the code examples from this page to give me an idea of how to implement buttons in an HTML 5 Canvas Game.  I had to modified
