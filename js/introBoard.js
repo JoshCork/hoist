@@ -77,11 +77,9 @@ StartBoard.prototype.constructor = StartBoard;
 
 /**
  * This method handels all the rendering of the startBoard.
- * @return {n/a} this method does not return anything. 
+ * @return {n/a} this method does not return anything it just renders the start board. 
  */
-StartBoard.prototype.render = function() {
-
-	// renders the player picker when lives are <= 0
+StartBoard.prototype.render = function() {	
     if (scoreboard.lives <= 0 || scoreboard.gameStatus === 'new') {
     	ctx.fillStyle = "red";
 		ctx.fillRect(0, tileHeight*3, cWidth, tileHeight*2);
@@ -102,13 +100,17 @@ StartBoard.prototype.render = function() {
 	    	ctx.fillText(this.NEW_GAME_TEXT[3], hCenter, (tileHeight*3)+(tileHeight/2)+fontSize*4.5);
 	    }
 
-
         this.allPlayerBtns.forEach(function(button) {
             button.render();
         });
     }
 }
 
+/**
+ * this method calls the update function for each button that has been rendered which 
+ * in turn calls and listens for any intersects or clicks on each of the objects.
+ * @return {[type]} [description]
+ */
 StartBoard.prototype.update = function() {
     // update the player based on which character is picked. 
     this.allPlayerBtns.forEach(function(button) {
@@ -116,6 +118,14 @@ StartBoard.prototype.update = function() {
     });
 }
 
+/**
+ * This creates a player button, a class that inherits from the UIObject. The player button is
+ * used to provide a UI object for the user to interact with in selecting a player for the game. 
+ * @param {string} text        text to be rendered on the button.
+ * @param {number} x           x coordinate where the button is to be drawn
+ * @param {number} y           y coordinate where the button is to be drawn
+ * @param {string} spriteImage path to the image of the sprite associated with this button. 
+ */
 var PlayerButton = function(text, x, y, spriteImage) {
     this.x = x;
     this.y = y;
@@ -127,9 +137,16 @@ var PlayerButton = function(text, x, y, spriteImage) {
     this.sprite = spriteImage;
 }
 
+// inherits from UIObject
 PlayerButton.prototype = Object.create(UIObject.prototype);
+// creates a constructor specific to the PlayerButton class and not the UIObject class
 PlayerButton.prototype.constructor = PlayerButton;
 
+/**
+ * This method renders the button with two different background colors depending on if the 
+ * user is hovering the mouse over that button or not. 
+ * @return {n/a} this method does not return any values it just sets properties and renders the button.
+ */
 PlayerButton.prototype.render = function() {
     //set color
     if (this.hovered) {
@@ -159,6 +176,13 @@ PlayerButton.prototype.render = function() {
     ctx.fillText(this.text, textX, textY);
 }
 
+/**
+ * this method watches the click actions of the mouse and updates the status
+ * of the object.  If the click event happens in the coordinates of this button
+ * it fires the handler method. 
+ * @return {n/a} this method does not return any value but does call the handler
+ *                    if a click event occurs. 
+ */
 PlayerButton.prototype.update = function() {
     var wasNotClicked = !this.clicked;
     this.updateStats();
@@ -170,6 +194,12 @@ PlayerButton.prototype.update = function() {
     }
 }
 
+/**
+ * this method fires when a click event has occured for as specific button.
+ * once it fires it resets the player in the game and scoreboard and sets the 
+ * game's status to a retry game (vs. a new game).
+ * @return {n/a} this method does not return any values. 
+ */
 PlayerButton.prototype.handler = function() {
     newPlayer(this.text);
     scoreboard = new ScoreBoard();
