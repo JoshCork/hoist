@@ -68,6 +68,7 @@ var Engine = (function(global) {
         //reset();
         lastTime = Date.now();
         configApp();
+        listenForMouse();
         main();
     }
 
@@ -116,6 +117,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        startBoard.update();
         scoreboard.update(dt);
     }
 
@@ -173,7 +175,9 @@ var Engine = (function(global) {
             enemy.render();
         });
         player.render();
+        startBoard.render();
         scoreboard.render();
+        
     }
 
     /* This function does nothing but it could have been a good place to
@@ -187,14 +191,25 @@ var Engine = (function(global) {
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
-     * all of these images are properly loaded our game will start.
+     * all of these images are properly loaded our game will start. 
+     *
+     * I was having an error with JavaScript failing to execute drawImage. I thought it 
+     * was something to do with how I was implementing the subclass but everything was
+     * checking out just fine.  Then I found this stackoverflow article: http://bit.ly/1xxCNaa
+     * which helped point me in the right direction and understand that I wasn't loading
+     * the image here in the Resources to pull from.  So even though the image existed
+     * in the directory i couldn't get at it.  
      */
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-princess-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-horn-girl.png'        
     ]);
     Resources.onReady(init);
 

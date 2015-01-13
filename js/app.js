@@ -5,12 +5,13 @@
  * @var {number} cWidth         - This is the canvas width.
  * @var {number} cHeight        - This is the canvas height.
  * @var {number} tileWidth      - This is the width of an individual tile.
- * @var {number} tileHeight     - This is the height of an individual tile (after the overlap).
- * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game.
- * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile.
- * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen.
+ * @var {number} tileHeight     - This is the height of an individual tile (after the overlap). 
+ * @var {number} startingLives  - This is the number of lives that is given to a player at the start of a game. 
+ * @var {number} scoreIncrement - This is the number of points a player gets for reaching the water tile. 
+ * @var {number} enemyCount     - This is the number of enemies that are being tracked going across the screen. 
  */
-var hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
+var player, hCenter, vCenter, cWidth, cHeight, tileWidth, tileHeight, startingLives, scoreIncrement, enemyCount;
+
 
 /**
  * This is a helper function called once when the app is loaded to set all the variables that get used throughout
@@ -33,7 +34,6 @@ function configApp() {
     vCenter = cHeight / 2;
     tileWidth = 101;
     tileHeight = 83;
-    scoreIncrement = 100;
     startingLives = 5;
     enemyCount = 3;
 }
@@ -92,7 +92,8 @@ function getBoardLoc(x, y) {
 var ScoreBoard = function() {
     this.LIVES_TEXT = "Lives: ";
     this.GAME_SCORE_TEXT = " Score: ";
-    this.gameOverText = ["GAME OVER!!!", "Press the 'R' key", "to", "start the game over"];
+    this.gameOverText = ["GAME OVER!!!", "Click on a player below to start over."];
+    this.gameStatus = 'new';
     this.score = 0;
     this.lives = startingLives;
     this.textX = 0;
@@ -121,23 +122,13 @@ ScoreBoard.prototype.render = function() {
     ctx.line = 3;
     ctx.fillStyle = 'white';
 
-    if (this.lives >= 0) {
-        ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
+    if (this.lives > 0) {
+        ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
         ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
     } else {
-        ctx.fillStyle = 'rgba(255,221,50,.50)'
-        ctx.fillRect(102, 133, 300, 250);
-        ctx.fillStyle = 'white';
-        ctx.textAlign = "center";
-        ctx.font = "26pt Impact";
-        ctx.fillText(this.gameOverText[1], hCenter, 200);
-        ctx.strokeText(this.gameOverText[1], hCenter, 200);
-        ctx.fillText(this.gameOverText[2], hCenter, 250);
-        ctx.strokeText(this.gameOverText[2], hCenter, 250);
-        ctx.fillText(this.gameOverText[3], hCenter, 300);
-        ctx.strokeText(this.gameOverText[3], hCenter, 300);
 
+        ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.font = "36pt Impact";
         ctx.fillText(this.gameOverText[0], hCenter, 40);
         ctx.strokeText(this.gameOverText[0], hCenter, 40);
@@ -159,24 +150,9 @@ ScoreBoard.prototype.update = function(dt) {
      * screen.
      * @param  {number} this.lives > 0  from the instance of the scoreboard that has been created for this game.
      */
-    if (this.lives > 0) {
-        //do nothing - no need to update the render values. 
 
-    } else if (this.lives === 0) {
+    // Should diplay the score in the center here now? Render it as part of the start board.
 
-        this.rectY = this.rectY + (50 * dt);
-        this.textY = this.textY + (50 * dt);
-
-        // move the lives / score half way down the screen then stop.    
-        if (this.rectY >= vCenter) {
-            this.lives = -1;
-        }
-
-    } else {
-
-        // do nothing
-
-    }
 }
 
 /*
@@ -184,8 +160,8 @@ ScoreBoard.prototype.update = function(dt) {
  * 100 each time it is called.
  * @return {n/a} this method does not return any values.
  */
-ScoreBoard.prototype.increment = function() {
-    this.score = this.score + scoreIncrement;
+ScoreBoard.prototype.increment = function(score) {
+    this.score = this.score + score;
 }
 
 /*
@@ -258,142 +234,75 @@ Enemy.prototype.render = function() {
 }
 
 
-/**
- * Class Player: This is the Player class.  Our player must avoid Enemies or else they lose a life.
- * The job of the Player is to move around the board avoiding enemies and making it to the water tiles
- * where they will earn points and respawn back at the grass tiles.
- *
- * @class Player
- * @classdesc A generic player.
- * @property {Array.<number>} respawnLoc    - An array that stores the x and y coordinates of where the player will respawn after
- *                                          reaching the water tiles.
- * @property {number} VERTICAL_HOPS         - The vertical pixels this player can jump when moving up or down
- * @property {number} HORIZONTAL_HOPS       - The horizontal pixels this player can jump when moving left or right
- * @property {int} x                        - The current horizontal value on the canvas (the x coordinate).
- * @property {int} y                        - The current vertical value on the canvas (the y coordinate).
- * @property {Array.<number>} boardLoc      - The current location on the grid where the Player is. Stores a location of the tile on
- *                                          the map where the player currently is.  The map grid starts with the upper left most tile being
- *                                          at position zero, zero (0,0).
- * @property {string} sprite                - The path to the image of this player.
- * @constructor
- */
-var Player = function() {
-    this.sprite = 'images/char-boy.png';
-    this.respawnLoc = [200, 380];
-
-    this.x = this.respawnLoc[0];
-    this.y = this.respawnLoc[1];
-
-    this.VERTICAL_HOPS = 81;
-    this.HORIZONTAL_HOPS = 100;
-    this.boardLoc = getBoardLoc(this.x, this.y);
-}
 
 /**
- * Operates on an instance of Player object and updates and properties associated with that instnace.
- *
- * @param {number}  dt  The dt parameter will ensure the game runs at the same speed for all computers.
- *
- * @return {n/a} this method does not return any values.
+ * This function listens for mouse movement on the screen.  It also detects
+ * clicking of the mouse.  When the mouse it clicked it captures the x and y coordinates
+ * and the status of the mouse click. 
+ * @return {n/a} this function does not return any values. 
  */
-Player.prototype.update = function(dt) {
-    this.boardLoc = getBoardLoc(this.x, this.y);
-}
+function listenForMouse() {
 
-/**
- * Operates on an instance of the Player object and renders that instance to the screen.
- * @return {n/a} - this method does not return any values.
- */
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    console.log("in listen for mouse");
 
-}
-
-/**
- * Operates on an instance of the Player object and moves the player to the respawn location defined
- * in the Player object.
- * @return {n/a} - This method does not return any values.
- */
-Player.prototype.respawn = function() {
-    this.x = this.respawnLoc[0];
-    this.y = this.respawnLoc[1];
-    scoreboard.decrement();
-}
-
-/**
- * Operates on an instace of the Player object and calls the scoreboard's increment method (to
- * increase the score) and then moves the player back to the grass tile in the same horizontal
- * position that they are currently in.  This method is called when a player reaches one of the
- * water tiles.
- * @return {n/a} - this method does not return any values.
- */
-Player.prototype.achievement = function() {
-    this.y = this.respawnLoc[1];
-    scoreboard.increment();
-
-}
-
-/**
- * Operates on an instance of of the Player object and takes action based on the key that was
- * pressed on the keyboard as input.
- * @param  {string} input - passed from the keyup event to incidate which key was pressed.
- * @return {n/a}       [description]
- */
-Player.prototype.handleInput = function(e) {
-
-    console.log(e);
-
-    e.preventDefault();
-
-    var input
-    , allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        82: 'reset',
+    ctx.mouse = {
+        x: 0,
+        y: 0,
+        clicked: false,
+        down: false
     };
 
-    input = allowedKeys[e.keyCode];
+    canvas.addEventListener("mousemove", function(e) {
+        ctx.mouse.x = e.offsetX;
+        ctx.mouse.y = e.offsetY;
+        ctx.mouse.clicked = (e.which == 1 && !ctx.mouse.down);
+        ctx.mouse.down = (e.which == 1);
+    });
+
+    canvas.addEventListener("mousedown", function(e) {
+        ctx.mouse.clicked = !ctx.mouse.down;
+        ctx.mouse.down = true;
+    });
+
+    canvas.addEventListener("mouseup", function(e) {
+        ctx.mouse.down = false;
+        ctx.mouse.clicked = false;        
+    });
+}
 
 
 
-    if (scoreboard.lives > 0) {
-        switch (input) {
-            case 'up':
-                e.preventDefault();
-                if (this.y > 57) { // anything less than 57 pixels means the player has made it to the water tile.
-                    this.y = this.y - this.VERTICAL_HOPS;
-                } else {
-                    player.achievement();
-                }
-                break;
-            case 'down':
-                if (this.y < this.respawnLoc[1]) {
-                    this.y = this.y + this.VERTICAL_HOPS;
-                } else { /* do nothing - cannot move below the bottom tile. */ }
-                break;
-            case 'left':
-                if (this.x > 0) {
-                    this.x = this.x - this.HORIZONTAL_HOPS;
-                } else { /* do nothing - cannot move past the left tile. */ }
-                break;
-            case 'right':
-                if (this.x < 400) {
-                    this.x = this.x + this.HORIZONTAL_HOPS;
-                } else { /* do nothing - cannot move past the right tile. */ }
-                break;
+/**
+ * This function is used to determine which character is going to be the
+ * active player in the game for this round.
+ * @param  {string} character name of the character that will be played in this round
+ * @return {n/a}           This function does not return any values.  It sets the player
+ *                              variable for the game.
+ */
+function newPlayer(character) {
 
-
-        }
-    } else {
-        if (input === 'reset') {
+    switch (character) {
+        case 'CatGirl':
+            player = new CatGirl();
+            break;
+        case 'lilBoy':
+            player = new LilBoy();
+            break;
+        case 'Horns':
+            player = new Horns();
+            break;
+        case 'Prin':
+            player = new Prin();
+            break;
+        case 'Pinky':
+            player = new Pinky();
+            break;
+        default:
             player = new Player();
-            scoreboard = new ScoreBoard();
-        } else { /* do nothing - cannot move until game has been reset. */ }
-
     }
 }
+
+
 
 /**
  * Instantiate the objects in the game. All enemy objects are placed in an array called allEnemies.
@@ -405,7 +314,9 @@ var allEnemies = [];
 for (i = 0; i < enemyCount; i++) {
     allEnemies.push(new Enemy());
 }
-var player = new Player();
+
+newPlayer('lilBoy');
+var startBoard = new StartBoard();
 var scoreboard = new ScoreBoard();
 
 
