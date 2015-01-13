@@ -124,12 +124,12 @@ ScoreBoard.prototype.render = function() {
     ctx.fillStyle = 'white';
 
     if (this.lives > 0) {
-        ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
+        ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.fillText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
         ctx.strokeText(this.LIVES_TEXT + this.lives + this.GAME_SCORE_TEXT + this.score, this.textX, this.textY);
     } else {      
          
-        ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
+        ctx.clearRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
         ctx.font = "36pt Impact";
         ctx.fillText(this.gameOverText[0], hCenter, 40);
         ctx.strokeText(this.gameOverText[0], hCenter, 40);
@@ -296,9 +296,7 @@ canvas.addEventListener("mouseup", function(e) {
  */
 Player.prototype.handleInput = function(e) {
 
-    console.log(e);
-
-    e.preventDefault();
+    console.log(e);    
 
     var input
     , allowedKeys = {
