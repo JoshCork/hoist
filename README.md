@@ -3,6 +3,7 @@ frontend-nanodegree-arcade-game
 
 ## Instructions
 To play the game just point your browser at the index.html page at the root of this folder. 
+Alternatively you can play the game on my Github pages site: http://joshcork.github.io/hoist/
 
 ## Attribution
 I used the code examples from this page to give me an idea of how to implement buttons in an HTML 5 Canvas Game.  I had to modified
