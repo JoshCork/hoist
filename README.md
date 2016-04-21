@@ -4,7 +4,7 @@ frontend-nanodegree-arcade-game
 ## Instructions
 
 To play the game just point your browser at the index.html page at the root of this folder. 
-Alternatively you can play the game on my Github pages site: http://joshcork.github.io/hoist/
+Alternatively you can play the game on my Github pages site: http://joshcork.github.io/hoist-arcade-game/
 
 ## In this project
 What exactly is in this project?  It's all the files and reflections I created while taking the coursework as well as the supporting files for completing the project.  If you want to browse and see my course reflections just check out the coursework folder.  
